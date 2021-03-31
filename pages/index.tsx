@@ -1,4 +1,6 @@
 import React from 'react'
+import { getSession } from 'next-auth/client'
+import { GetServerSideProps } from 'next'
 
 import Content from '../components/Content'
 import Footer from '../components/Footer'
@@ -14,6 +16,17 @@ function Dashboard(): JSX.Element {
       <Footer />
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const session = await getSession(ctx)
+
+  if (!session && ctx.res) {
+    ctx.res.writeHead(302, { Location: '/api/auth/signin' })
+    ctx.res.end()
+  }
+
+  return { props: { session } }
 }
 
 export default Dashboard
