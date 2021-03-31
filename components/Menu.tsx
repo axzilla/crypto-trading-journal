@@ -1,9 +1,7 @@
 // Packages
 import React, { useEffect, useState } from 'react'
-// import PropTypes from 'prop-types'
-// import { Avatar, Button, GeistUIThemes, Link, Popover, Tabs, useTheme } from '@geist-ui/react'
 import { Avatar, GeistUIThemes, Link, Popover, Tabs } from '@geist-ui/react'
-// import * as Icons from 'react-feather'
+import { signOut, useSession } from 'next-auth/client'
 
 // Utils
 import makeStyles from '../utils/makeStyles'
@@ -86,31 +84,25 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   }
 }))
 
-const popoverContent = () => (
-  <>
-    <Popover.Item title>
-      <span>User Settings</span>
-    </Popover.Item>
-    <Popover.Item>
-      <Link>Teams</Link>
-    </Popover.Item>
-    <Popover.Item>
-      <Link>GitHub</Link>
-    </Popover.Item>
-    <Popover.Item line />
-    <Popover.Item>
-      <Link>Logout</Link>
-    </Popover.Item>
-  </>
-)
+const popoverContent = () => {
+  const [session] = useSession()
+
+  return (
+    <>
+      <Popover.Item title>
+        <span>{session.user.email}</span>
+      </Popover.Item>
+      <Popover.Item onClick={signOut}>
+        <Link>Logout</Link>
+      </Popover.Item>
+    </>
+  )
+}
 
 // eslint-disable-next-line
 function Menu(): JSX.Element {
   const classes = useStyles()
-  // const theme = useTheme()
-
   const [fixed, setFixed] = useState(false)
-  // const isDark = theme.type === 'dark'
 
   useEffect(() => {
     const scrollHandler = () => {
@@ -130,15 +122,6 @@ function Menu(): JSX.Element {
             <div className={classes.headerTitle}>Crypto Trading Tools</div>
           </div>
           <div className={classes.sidebar}>
-            {/* <Button
-              aria-label="Toggle Dark mode"
-              className={classes.themeIcon}
-              auto
-              type="abort"
-              onClick={toggleDarkMode}
-            >
-              {isDark ? <Icons.Sun size={16} /> : <Icons.Moon size={16} />}
-            </Button> */}
             <Popover
               content={popoverContent}
               placement="bottomEnd"
@@ -165,9 +148,5 @@ function Menu(): JSX.Element {
     </>
   )
 }
-
-// Menu.propTypes = {
-//   toggleDarkMode: PropTypes.func.isRequired
-// }
 
 export default Menu
