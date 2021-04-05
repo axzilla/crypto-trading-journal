@@ -4,6 +4,7 @@ import axios from 'axios'
 import useSWR from 'swr'
 import { request } from 'graphql-request'
 import moment from 'moment'
+import { useSession } from 'next-auth/client'
 
 // Geist UI
 import { GeistUIThemes, Button, Modal, Grid, Table, Tag, Spacer } from '@geist-ui/react'
@@ -61,6 +62,7 @@ const fetcher = query => request('/api/graphql', query)
 
 function Header(): JSX.Element {
   const classes = useStyles()
+  const [session] = useSession()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [exchangesAll, setExchangesAll] = useState([])
@@ -130,6 +132,7 @@ function Header(): JSX.Element {
 
   async function handleCreateTrade() {
     const tradeData = {
+      user: session.user.uuid,
       exchange,
       symbol,
       date,
@@ -142,6 +145,7 @@ function Header(): JSX.Element {
       .post('/api/graphql', {
         query: `
           mutation (
+            $user: String!,
             $symbol: String!,
             $exchange: String!,
             $action: String!,
@@ -151,6 +155,7 @@ function Header(): JSX.Element {
             $fee: String!,
           ) {
             createTrade (
+              user: $user
               symbol: $symbol
               exchange: $exchange
               action: $action
@@ -159,6 +164,7 @@ function Header(): JSX.Element {
               quantity: $quantity
               fee: $fee
             ) {
+              user
               symbol
               exchange
               action
