@@ -29,9 +29,10 @@ module.exports = {
   ],
   rules: {
     'react/react-in-jsx-scope': 'off',
-    'no-console': 'error'
-    // 'prettier/prettier': ['error', {}, { usePrettierrc: true }],
-    // 'react/prop-types': 'off',
+    'no-console': 'error',
+    'prettier/prettier': 'error',
+    'react/no-unused-prop-types': 'error'
+    // 'prettier/prettier': ['error', {}, { usePrettierrc: true }]
     // 'jsx-a11y/anchor-is-valid': [
     //   'error',
     //   {
