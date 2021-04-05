@@ -5,7 +5,22 @@ import db from '../../knex/knex'
 
 const typeDefs = gql`
   type Query {
-    trades: [Trade!]!
+    allTrades: [Trade!]!
+  }
+
+  type Trade {
+    user: String!
+    uuid: String!
+    id: ID!
+    symbol: String!
+    exchange: String!
+    action: String!
+    date: String!
+    price: String!
+    quantity: String!
+    fee: String!
+    status: String!
+    date_created: String!
   }
 
   type Mutation {
@@ -20,25 +35,11 @@ const typeDefs = gql`
       fee: String!
     ): Trade!
   }
-
-  type Trade {
-    user: String!
-    id: ID!
-    symbol: String!
-    exchange: String!
-    action: String!
-    date: String!
-    price: String!
-    quantity: String!
-    fee: String!
-    status: String!
-    date_created: String!
-  }
 `
 
 const resolvers = {
   Query: {
-    trades: () => {
+    allTrades: () => {
       return db.select('*').from('trades')
     }
   },

@@ -58,8 +58,6 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   }
 }))
 
-const fetcher = query => request('/api/graphql', query)
-
 function Header(): JSX.Element {
   const classes = useStyles()
   const [session] = useSession()
@@ -76,9 +74,11 @@ function Header(): JSX.Element {
   const [fee, setFee] = useState('')
   const [action, setAction] = useState('')
 
-  const { data, error } = useSWR(
-    `{
-      trades {
+  const ALL_TRADES_QUERY = /* GraphQL */ `
+    query allTrades {
+      allTrades {
+        uuid
+        user
         id
         symbol
         exchange
@@ -90,16 +90,32 @@ function Header(): JSX.Element {
         status
         date_created
       }
-    }`,
-    fetcher
-  )
+    }
+  `
 
+  const TRADES_BY_USER_QUERY = /* GraphQL */ `
+    query allTrades {
+      allTrades {
+        uuid
+        user
+        id
+        symbol
+        exchange
+        action
+        date
+        price
+        quantity
+        fee
+        status
+        date_created
+      }
+    }
+  `
+
+  const { data, error } = useSWR(ALL_TRADES_QUERY, query => request('/api/graphql', query))
   if (error) console.log('failed to load') // eslint-disable-line
   if (!data) console.log('loading') // eslint-disable-line
-  if (data) {
-    const { trades } = data
-    console.log(trades) // eslint-disable-line
-  }
+  if (data) console.log(data.allTrades) // eslint-disable-line
 
   useEffect(() => {
     handleGetExchanges()
@@ -204,7 +220,7 @@ function Header(): JSX.Element {
         <Table
           data={
             data &&
-            data.trades
+            data.allTrades
               .sort((a, b) => b.date_created - a.date_created)
               .map(trade => {
                 const { exchange, symbol, action, price, quantity, fee, date, status } = trade
