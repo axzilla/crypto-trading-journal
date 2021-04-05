@@ -10,6 +10,7 @@ const typeDefs = gql`
 
   type Mutation {
     createTrade(
+      user: String!
       symbol: String!
       exchange: String!
       action: String!
@@ -21,6 +22,7 @@ const typeDefs = gql`
   }
 
   type Trade {
+    user: String!
     id: ID!
     symbol: String!
     exchange: String!
@@ -43,10 +45,10 @@ const resolvers = {
   Mutation: {
     createTrade: async (
       parent,
-      { symbol, exchange, action, date, price, quantity, fee, status }
+      { user, symbol, exchange, action, date, price, quantity, fee, status }
     ) => {
       const createdTrade = await db('trades')
-        .insert({ symbol, exchange, action, date, price, quantity, fee, status })
+        .insert({ user, symbol, exchange, action, date, price, quantity, fee, status })
         .returning('*')
       return createdTrade[0]
     }
