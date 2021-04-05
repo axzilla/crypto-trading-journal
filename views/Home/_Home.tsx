@@ -129,7 +129,7 @@ function Header(): JSX.Element {
 
   const user = session.user.uuid
 
-  const { data, error } = useSWR([TRADES_BY_USER_QUERY, user], (query, user) =>
+  const { data, error, mutate } = useSWR([TRADES_BY_USER_QUERY, user], (query, user) =>
     request('/api/graphql', query, { user })
   )
 
@@ -183,6 +183,7 @@ function Header(): JSX.Element {
 
       setIsModalOpen(false)
       resetForm()
+      mutate()
       console.log(createTrade) // eslint-disable-line
     } catch (error) {
       if (error) throw error
