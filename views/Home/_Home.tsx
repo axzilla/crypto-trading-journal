@@ -7,7 +7,7 @@ import moment from 'moment'
 import { useSession } from 'next-auth/client'
 
 // Geist UI
-import { GeistUIThemes, Button, Modal, Grid, Table, Tag, Spacer } from '@geist-ui/react'
+import { GeistUIThemes, Button, Modal, Grid, Table, Tag, Spacer, Text } from '@geist-ui/react'
 import { Trash as TrashIcon, Edit as EditIcon } from '@geist-ui/react-icons'
 
 // Components UI
@@ -17,10 +17,6 @@ import { Input, Autocomplete, Select, DateTimePicker } from './../../components-
 import makeStyles from '../../utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
-  root: {
-    // borderBottom: `solid 1px ${ui.palette.accents_2}`
-  },
-
   content: {
     display: 'flex',
     flexDirection: 'row',
@@ -30,7 +26,6 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
     boxSizing: 'border-box',
     margin: '0 auto'
   },
-
   name: {
     display: 'flex',
     flexDirection: 'column',
@@ -61,7 +56,8 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
 function Header(): JSX.Element {
   const classes = useStyles()
   const [session] = useSession()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCreateTradeModalOpen, setIsCreateTradeModalOpen] = useState(false)
+  const [isDeleteTradeModalOpen, setIsDeleteTradeModalOpen] = useState(false)
 
   const [exchangesAll, setExchangesAll] = useState([])
   const [exchangesRelated, setExchangesRelated] = useState([])
@@ -189,7 +185,7 @@ function Header(): JSX.Element {
 
       const { createTrade } = await request('/api/graphql', CREATE_TRADE_MUTATION, tradeData)
 
-      setIsModalOpen(false)
+      setIsCreateTradeModalOpen(false)
       resetForm()
       mutate()
       console.log(createTrade) // eslint-disable-line
@@ -200,9 +196,9 @@ function Header(): JSX.Element {
 
   async function handleDeleteTrade(uuid) {
     try {
-      const { createTrade } = await request('/api/graphql', DELETE_TRADE_MUTATION, { uuid })
+      await request('/api/graphql', DELETE_TRADE_MUTATION, { uuid })
       mutate()
-      console.log(createTrade) // eslint-disable-line
+      setIsDeleteTradeModalOpen(false)
     } catch (error) {
       if (error) throw error
     }
@@ -210,14 +206,12 @@ function Header(): JSX.Element {
 
   return (
     <>
-      <div className={classes.root}>
-        <div className={classes.content}>
-          <div className={classes.name}>
-            <div className={classes.title}>
-              <Button onClick={() => setIsModalOpen(true)} type="secondary" auto>
-                Add Trade
-              </Button>
-            </div>
+      <div className={classes.content}>
+        <div className={classes.name}>
+          <div className={classes.title}>
+            <Button onClick={() => setIsCreateTradeModalOpen(true)} type="secondary" auto>
+              Add Trade
+            </Button>
           </div>
         </div>
       </div>
@@ -250,7 +244,7 @@ function Header(): JSX.Element {
                   actions: (
                     <>
                       <Button
-                        onClick={() => handleDeleteTrade(uuid)}
+                        onClick={() => setIsDeleteTradeModalOpen(uuid)}
                         iconRight={<TrashIcon />}
                         auto
                         size="small"
@@ -275,7 +269,8 @@ function Header(): JSX.Element {
         </Table>
       </div>
 
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {/* Create Trade Modal */}
+      <Modal open={isCreateTradeModalOpen} onClose={() => setIsCreateTradeModalOpen(false)}>
         <Modal.Title>Add Trade</Modal.Title>
         <Modal.Content>
           <Grid.Container justify="center">
@@ -348,7 +343,7 @@ function Header(): JSX.Element {
             />
           </Grid.Container>
         </Modal.Content>
-        <Modal.Action passive onClick={() => setIsModalOpen(false)}>
+        <Modal.Action passive onClick={() => setIsCreateTradeModalOpen(false)}>
           Cancel
         </Modal.Action>
         <Modal.Action
@@ -356,6 +351,23 @@ function Header(): JSX.Element {
           onClick={handleCreateTrade}
         >
           Submit
+        </Modal.Action>
+      </Modal>
+
+      {/* Delete Trade Modal */}
+      <Modal open={isDeleteTradeModalOpen} onClose={() => setIsDeleteTradeModalOpen(false)}>
+        <Modal.Title>Delete Trade</Modal.Title>
+        <Modal.Subtitle>This trade will be deleted.</Modal.Subtitle>
+        <Modal.Content>
+          <Text type="error" style={{ textAlign: 'center' }}>
+            Warning: This action is not reversible. Please be certain.
+          </Text>
+        </Modal.Content>
+        <Modal.Action passive onClick={() => setIsDeleteTradeModalOpen(false)}>
+          Cancel
+        </Modal.Action>
+        <Modal.Action onClick={() => handleDeleteTrade(isDeleteTradeModalOpen)}>
+          Delete Trade
         </Modal.Action>
       </Modal>
     </>
