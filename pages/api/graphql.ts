@@ -4,10 +4,6 @@ import { gql, ApolloServer } from 'apollo-server-micro'
 import db from '../../knex/knex'
 
 const typeDefs = gql`
-  type Query {
-    tradesByUser(user: String!): [Trade!]!
-  }
-
   type Trade {
     user: String!
     uuid: String!
@@ -23,6 +19,10 @@ const typeDefs = gql`
     date_created: String!
   }
 
+  type Query {
+    tradesByUser(user: String!): [Trade!]!
+  }
+
   type Mutation {
     createTrade(
       user: String!
@@ -34,6 +34,8 @@ const typeDefs = gql`
       quantity: String!
       fee: String!
     ): Trade!
+
+    deleteTrade(uuid: String!): Trade!
   }
 `
 
@@ -51,6 +53,10 @@ const resolvers = {
       const createdTrade = await db('trades')
         .insert({ user, symbol, exchange, action, date, price, quantity, fee, status })
         .returning('*')
+      return createdTrade[0]
+    },
+    deleteTrade: async (_, { uuid }) => {
+      const createdTrade = await db('trades').where({ uuid }).del().returning('*')
       return createdTrade[0]
     }
   }

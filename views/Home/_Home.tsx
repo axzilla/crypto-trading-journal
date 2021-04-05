@@ -127,6 +127,14 @@ function Header(): JSX.Element {
     }
   `
 
+  const DELETE_TRADE_MUTATION = /* GraphQL */ `
+    mutation deleteTrade($uuid: String!) {
+      deleteTrade(uuid: $uuid) {
+        uuid
+      }
+    }
+  `
+
   const user = session.user.uuid
 
   const { data, error, mutate } = useSWR([TRADES_BY_USER_QUERY, user], (query, user) =>
@@ -190,6 +198,16 @@ function Header(): JSX.Element {
     }
   }
 
+  async function handleDeleteTrade(uuid) {
+    try {
+      const { createTrade } = await request('/api/graphql', DELETE_TRADE_MUTATION, { uuid })
+      mutate()
+      console.log(createTrade) // eslint-disable-line
+    } catch (error) {
+      if (error) throw error
+    }
+  }
+
   return (
     <>
       <div className={classes.root}>
@@ -211,7 +229,7 @@ function Header(): JSX.Element {
             data.tradesByUser
               .sort((a, b) => b.date_created - a.date_created)
               .map(trade => {
-                const { exchange, symbol, action, price, quantity, fee, date, status } = trade
+                const { exchange, symbol, action, price, quantity, fee, date, status, uuid } = trade
 
                 return {
                   exchange,
@@ -231,7 +249,12 @@ function Header(): JSX.Element {
                   ),
                   actions: (
                     <>
-                      <Button iconRight={<TrashIcon />} auto size="small" />
+                      <Button
+                        onClick={() => handleDeleteTrade(uuid)}
+                        iconRight={<TrashIcon />}
+                        auto
+                        size="small"
+                      />
                       <Spacer x={0.5} />
                       <Button iconRight={<EditIcon />} auto size="small" />
                     </>
