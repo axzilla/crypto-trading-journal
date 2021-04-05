@@ -1,20 +1,21 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { getSession } from 'next-auth/client'
 import { GetServerSideProps } from 'next'
 
-import Content from '../components/Content'
-import Footer from '../components/Footer'
-import Heading from '../components/Heading'
-import Menu from '../components/Menu'
+import { App as AppLayout } from './../layouts'
+import { Home as HomeView } from './../views'
 
-function Dashboard(): JSX.Element {
+type DashboardProps = {
+  toggleDarkMode: () => void
+  themeType: string
+}
+
+function Dashboard({ toggleDarkMode, themeType }: DashboardProps): JSX.Element {
   return (
-    <>
-      <Menu />
-      <Heading />
-      <Content />
-      <Footer />
-    </>
+    <AppLayout toggleDarkMode={toggleDarkMode} themeType={themeType}>
+      <HomeView />
+    </AppLayout>
   )
 }
 
@@ -27,6 +28,11 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   }
 
   return { props: { session } }
+}
+
+Dashboard.propTypes = {
+  toggleDarkMode: PropTypes.func.isRequired,
+  themeType: PropTypes.string.isRequired
 }
 
 export default Dashboard
