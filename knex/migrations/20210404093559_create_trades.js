@@ -3,6 +3,7 @@ exports.up = async function (knex) {
 
   return knex.schema.createTable('trades', function (table) {
     table.increments('id').primary()
+    table.uuid('user').notNullable()
     table.uuid('uuid').unique().notNullable().defaultTo(knex.raw('uuid_generate_v4()'))
     table.string('exchange').notNullable()
     table.string('symbol').notNullable()
