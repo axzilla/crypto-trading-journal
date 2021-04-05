@@ -1,13 +1,30 @@
 // Packages
+import { useState, useEffect } from 'react'
 import { CssBaseline, GeistProvider } from '@geist-ui/react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Provider as NextAuthProvider } from 'next-auth/client'
 import PropTypes from 'prop-types'
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 // Use the <Provider> to improve performance and allow components that call
 // `useSession()` anywhere in your application to access the `session` object.
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
+  const [themeType, setThemeType] = useState('')
+
+  useEffect(() => {
+    setThemeType(cookies.get('themeType'))
+  }, [])
+
+  function toggleDarkMode(): void {
+    cookies.set('themeType', cookies.get('themeType') === 'dark' ? 'light' : 'dark', { path: '/' })
+    setThemeType(themeType === 'dark' ? 'light' : 'dark')
+  }
+
+  const modifiedPageProps = { ...pageProps, toggleDarkMode, themeType }
+
   return (
     <>
       <Head>
@@ -35,9 +52,9 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         }}
         session={pageProps.session}
       >
-        <GeistProvider themeType="dark">
+        <GeistProvider themeType={themeType}>
           <CssBaseline />
-          <Component {...pageProps} />
+          <Component {...modifiedPageProps} />
         </GeistProvider>
       </NextAuthProvider>
     </>
