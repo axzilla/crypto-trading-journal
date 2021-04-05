@@ -1,17 +1,24 @@
 // Packages
 import React, { useEffect, useState } from 'react'
-import { Avatar, GeistUIThemes, Link, Popover, Tabs } from '@geist-ui/react'
+import PropTypes from 'prop-types'
 import { signOut, useSession } from 'next-auth/client'
 
 // Utils
-import makeStyles from '../utils/makeStyles'
+import makeStyles from '../../../../utils/makeStyles'
+
+// Geist UI
+import { Button, GeistUIThemes, Link, Popover, Tabs, Avatar, Spacer } from '@geist-ui/react'
+import {
+  Sun as SunIcon,
+  Moon as MoonIcon,
+  TrendingUp as TrendingUpIcon
+} from '@geist-ui/react-icons'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   header: {
     width: ui.layout.pageWidthWithMargin,
     maxWidth: '100%',
     margin: '0 auto',
-    backgroundColor: ui.palette.background,
     fontSize: 16,
     height: 60,
     zIndex: 15
@@ -32,7 +39,6 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   nav: {
     position: 'sticky',
     top: 0,
-    backgroundColor: ui.palette.background,
     borderBottom: `solid 1px ${ui.palette.accents_2}`,
     zIndex: 15
   },
@@ -61,7 +67,7 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
       display: 'none !important'
     },
     '& .tab': {
-      padding: '12px !important',
+      padding: '12px 0 !important',
       margin: '0 !important',
       fontSize: '14px !important'
     }
@@ -84,25 +90,15 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   }
 }))
 
-const popoverContent = () => {
-  const [session] = useSession()
-
-  return (
-    <>
-      <Popover.Item title>
-        <span>{session.user.email}</span>
-      </Popover.Item>
-      <Popover.Item onClick={signOut}>
-        <Link>Logout</Link>
-      </Popover.Item>
-    </>
-  )
+type MenuProps = {
+  toggleDarkMode: () => void
+  themeType: string
 }
 
-// eslint-disable-next-line
-function Menu(): JSX.Element {
+function Menu({ toggleDarkMode, themeType }: MenuProps): JSX.Element {
   const classes = useStyles()
   const [fixed, setFixed] = useState(false)
+  const [session] = useSession()
 
   useEffect(() => {
     const scrollHandler = () => {
@@ -119,34 +115,50 @@ function Menu(): JSX.Element {
       <div className={classes.header}>
         <div className={classes.headerContent}>
           <div style={{ display: 'flex' }}>
+            <TrendingUpIcon />
             <div className={classes.headerTitle}>Crypto Trading Tools</div>
           </div>
           <div className={classes.sidebar}>
             <Popover
-              content={popoverContent}
+              content={
+                <>
+                  <Popover.Item title>
+                    <span>{session.user.email}</span>
+                  </Popover.Item>
+                  <Popover.Item onClick={signOut}>
+                    <Link>Logout</Link>
+                  </Popover.Item>
+                </>
+              }
               placement="bottomEnd"
               portalClassName={classes.popover}
             >
-              <Avatar text="OA" />
+              <Avatar text={session.user.email.slice(0, 1).toUpperCase()} />
             </Popover>
+            <Spacer />
+            <Button
+              onClick={toggleDarkMode}
+              iconRight={themeType === 'dark' ? <MoonIcon /> : <SunIcon />}
+              auto
+              size="small"
+            />
           </div>
         </div>
       </div>
       <nav className={classes.nav + ' ' + (fixed ? classes.navFixed : '')}>
         <div className={classes.navContent}>
           <Tabs initialValue="1">
-            <Tabs.Item label="Overview" value="1" />
-            <Tabs.Item label="Projects" value="2" />
-            <Tabs.Item label="Integrations" value="3" />
-            <Tabs.Item label="Activity" value="4" />
-            <Tabs.Item label="Domains" value="5" />
-            <Tabs.Item label="Usage" value="6" />
-            <Tabs.Item label="Settings" value="7" />
+            <Tabs.Item label="Trading Journal" value="1" />
           </Tabs>
         </div>
       </nav>
     </>
   )
+}
+
+Menu.propTypes = {
+  toggleDarkMode: PropTypes.func.isRequired,
+  themeType: PropTypes.string.isRequired
 }
 
 export default Menu
