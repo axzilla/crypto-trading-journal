@@ -18,7 +18,7 @@ import makeStyles from '../../utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   root: {
-    borderBottom: `solid 1px ${ui.palette.accents_2}`
+    // borderBottom: `solid 1px ${ui.palette.accents_2}`
   },
 
   content: {
