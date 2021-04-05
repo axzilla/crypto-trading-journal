@@ -5,7 +5,7 @@ import db from '../../knex/knex'
 
 const typeDefs = gql`
   type Query {
-    allTrades: [Trade!]!
+    tradesByUser(user: String!): [Trade!]!
   }
 
   type Trade {
@@ -39,13 +39,13 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    allTrades: () => {
-      return db.select('*').from('trades')
+    tradesByUser: (_: unknown, { user }: never) => {
+      return db.select('*').from('trades').where({ user })
     }
   },
   Mutation: {
     createTrade: async (
-      parent,
+      _: unknown,
       { user, symbol, exchange, action, date, price, quantity, fee, status }
     ) => {
       const createdTrade = await db('trades')

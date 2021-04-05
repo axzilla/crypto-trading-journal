@@ -74,28 +74,9 @@ function Header(): JSX.Element {
   const [fee, setFee] = useState('')
   const [action, setAction] = useState('')
 
-  const ALL_TRADES_QUERY = /* GraphQL */ `
-    query allTrades {
-      allTrades {
-        uuid
-        user
-        id
-        symbol
-        exchange
-        action
-        date
-        price
-        quantity
-        fee
-        status
-        date_created
-      }
-    }
-  `
-
   const TRADES_BY_USER_QUERY = /* GraphQL */ `
-    query allTrades {
-      allTrades {
+    query tradesByUser($user: String!) {
+      tradesByUser(user: $user) {
         uuid
         user
         id
@@ -112,10 +93,49 @@ function Header(): JSX.Element {
     }
   `
 
-  const { data, error } = useSWR(ALL_TRADES_QUERY, query => request('/api/graphql', query))
+  const CREATE_TRADE_MUTATION = /* GraphQL */ `
+    mutation createTrade(
+      $user: String!
+      $symbol: String!
+      $exchange: String!
+      $action: String!
+      $date: String!
+      $price: String!
+      $quantity: String!
+      $fee: String!
+    ) {
+      createTrade(
+        user: $user
+        symbol: $symbol
+        exchange: $exchange
+        action: $action
+        date: $date
+        price: $price
+        quantity: $quantity
+        fee: $fee
+      ) {
+        user
+        symbol
+        exchange
+        action
+        date
+        price
+        quantity
+        fee
+        status
+      }
+    }
+  `
+
+  const user = session.user.uuid
+
+  const { data, error } = useSWR([TRADES_BY_USER_QUERY, user], (query, user) =>
+    request('/api/graphql', query, { user })
+  )
+
   if (error) console.log('failed to load') // eslint-disable-line
   if (!data) console.log('loading') // eslint-disable-line
-  if (data) console.log(data.allTrades) // eslint-disable-line
+  if (data) console.log(data.tradesByUser) // eslint-disable-line
 
   useEffect(() => {
     handleGetExchanges()
@@ -147,59 +167,26 @@ function Header(): JSX.Element {
   }
 
   async function handleCreateTrade() {
-    const tradeData = {
-      user: session.user.uuid,
-      exchange,
-      symbol,
-      date,
-      price,
-      quantity,
-      fee,
-      action
+    try {
+      const tradeData = {
+        user: session.user.uuid,
+        exchange,
+        symbol,
+        date,
+        price,
+        quantity,
+        fee,
+        action
+      }
+
+      const { createTrade } = await request('/api/graphql', CREATE_TRADE_MUTATION, tradeData)
+
+      setIsModalOpen(false)
+      resetForm()
+      console.log(createTrade) // eslint-disable-line
+    } catch (error) {
+      if (error) throw error
     }
-    axios
-      .post('/api/graphql', {
-        query: `
-          mutation (
-            $user: String!,
-            $symbol: String!,
-            $exchange: String!,
-            $action: String!,
-            $date: String!,
-            $price: String!,
-            $quantity: String!,
-            $fee: String!,
-          ) {
-            createTrade (
-              user: $user
-              symbol: $symbol
-              exchange: $exchange
-              action: $action
-              date: $date
-              price: $price
-              quantity: $quantity
-              fee: $fee
-            ) {
-              user
-              symbol
-              exchange
-              action
-              date
-              price
-              quantity
-              fee,
-              status
-            }
-          }
-        `,
-        variables: tradeData
-      })
-      .then(res => {
-        setIsModalOpen(false)
-        resetForm()
-        console.log(res) // eslint-disable-line
-      })
-      .catch(err => console.log(err)) // eslint-disable-line
   }
 
   return (
@@ -220,7 +207,7 @@ function Header(): JSX.Element {
         <Table
           data={
             data &&
-            data.allTrades
+            data.tradesByUser
               .sort((a, b) => b.date_created - a.date_created)
               .map(trade => {
                 const { exchange, symbol, action, price, quantity, fee, date, status } = trade
