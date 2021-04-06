@@ -68,7 +68,7 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
     },
     '& .tab': {
       padding: '12px 0 !important',
-      margin: '0 !important',
+      // margin: '0 !important',
       fontSize: '14px !important'
     }
   },
