@@ -34,7 +34,8 @@ export default NextAuth({
       password: process.env.DATABASE_PASSWORD,
       host: process.env.DATABASE_HOST,
       port: process.env.DATABASE_PORT,
-      ssl: { rejectUnauthorized: false }
+      ssl: { rejectUnauthorized: false },
+      synchronize: true
     },
     { models: { User: Models.User } }
   ),
