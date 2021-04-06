@@ -4,7 +4,7 @@ import { getSession } from 'next-auth/client'
 import { GetServerSideProps } from 'next'
 
 import { App as AppLayout } from './../../layouts'
-import { Home as HomeView } from './../../views'
+import { TradeFeed as TradeFeedView } from './../../views'
 
 type DashboardProps = {
   toggleDarkMode: () => void
@@ -14,7 +14,7 @@ type DashboardProps = {
 function Dashboard({ toggleDarkMode, themeType }: DashboardProps): JSX.Element {
   return (
     <AppLayout toggleDarkMode={toggleDarkMode} themeType={themeType}>
-      <HomeView />
+      <TradeFeedView />
     </AppLayout>
   )
 }
