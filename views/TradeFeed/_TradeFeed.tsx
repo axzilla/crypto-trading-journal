@@ -54,23 +54,23 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   }
 }))
 
-function Header(): JSX.Element {
+function TradeFeed(): JSX.Element {
   const classes = useStyles()
   const router = useRouter()
   const [session] = useSession()
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
   const [isDeleteTradeModalOpen, setIsDeleteTradeModalOpen] = useState(false)
-
   const [exchangesAll, setExchangesAll] = useState([])
   const [exchangesRelated, setExchangesRelated] = useState([])
-
-  const [exchange, setExchange] = useState('')
-  const [symbol, setSymbol] = useState('')
-  const [date, setDate] = useState('')
-  const [price, setPrice] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [fee, setFee] = useState('')
-  const [action, setAction] = useState('')
+  const [tradeData, setTradeData] = useState({
+    exchange: '',
+    symbol: '',
+    date: '',
+    price: '',
+    quantity: '',
+    fee: '',
+    action: ''
+  })
 
   const TRADES_BY_USER_QUERY = /* GraphQL */ `
     query tradesByUser($user: String!) {
@@ -162,29 +162,23 @@ function Header(): JSX.Element {
   }
 
   function resetForm() {
-    setExchange('')
-    setSymbol('')
-    setDate('')
-    setPrice('')
-    setQuantity('')
-    setFee('')
-    setAction('')
+    setTradeData({
+      exchange: '',
+      symbol: '',
+      date: '',
+      price: '',
+      quantity: '',
+      fee: '',
+      action: ''
+    })
   }
 
   async function handleCreateTrade() {
     try {
-      const tradeData = {
-        user: session.user.uuid,
-        exchange,
-        symbol,
-        date,
-        price,
-        quantity,
-        fee,
-        action
-      }
-
-      const { createTrade } = await request('/api/graphql', CREATE_TRADE_MUTATION, tradeData)
+      const { createTrade } = await request('/api/graphql', CREATE_TRADE_MUTATION, {
+        ...tradeData,
+        user: session.user.uuid
+      })
 
       setIsTradeModalOpen(false)
       resetForm()
@@ -275,36 +269,17 @@ function Header(): JSX.Element {
         </Table>
       </div>
 
-      {/* Create Trade Modal */}
       <TradeModal
         isTradeModalOpen={isTradeModalOpen}
         setIsTradeModalOpen={setIsTradeModalOpen}
-        //
-        action={action}
-        exchange={exchange}
-        symbol={symbol}
-        date={date}
-        price={price}
-        quantity={quantity}
-        fee={fee}
-        //
-        setAction={setAction}
-        setExchange={setExchange}
-        setSymbol={setSymbol}
-        setDate={setDate}
-        setPrice={setPrice}
-        setQuantity={setQuantity}
-        setFee={setFee}
-        //
+        tradeData={tradeData}
+        setTradeData={setTradeData}
         exchangesRelated={exchangesRelated}
         setExchangesRelated={setExchangesRelated}
-        //
         exchangesAll={exchangesAll}
-        //
         handleCreateTrade={handleCreateTrade}
       />
 
-      {/* Delete Trade Modal */}
       <Modal open={isDeleteTradeModalOpen} onClose={() => setIsDeleteTradeModalOpen(false)}>
         <Modal.Title>Delete Trade</Modal.Title>
         <Modal.Subtitle>This trade will be deleted.</Modal.Subtitle>
@@ -324,4 +299,4 @@ function Header(): JSX.Element {
   )
 }
 
-export default Header
+export default TradeFeed

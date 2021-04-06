@@ -7,24 +7,12 @@ import { Modal, Grid } from '@geist-ui/react'
 import { Input, Autocomplete, Select, DateTimePicker } from '../../components-ui'
 
 function TradeModal({
+  tradeData,
+  setTradeData,
   setIsTradeModalOpen,
-  setAction,
-  setExchange,
-  setSymbol,
-  setDate,
-  setPrice,
-  setQuantity,
-  setFee,
   setExchangesRelated,
   handleCreateTrade,
   isTradeModalOpen,
-  action,
-  exchange,
-  symbol,
-  date,
-  price,
-  quantity,
-  fee,
   exchangesRelated,
   exchangesAll
 }: TradeModalProps): JSX.Element {
@@ -42,37 +30,50 @@ function TradeModal({
                 }
               )
               setExchangesRelated(relatedOptions)
-              setExchange(value)
+              setTradeData({ ...tradeData, exchange: value })
             }}
-            value={exchange}
+            value={tradeData.exchange}
             options={exchangesRelated}
             placeholder="Start typing"
             label="Exchange"
             fullWidth
           />
           <Input
-            onChange={e => setSymbol(e.target.value.toUpperCase())}
+            onChange={e => {
+              setTradeData({ ...tradeData, symbol: e.target.value.toUpperCase() })
+            }}
             name="symbol"
             placeholder="e.g. BTCUSD"
             label="Symbol"
             fullWidth
-            value={symbol}
+            value={tradeData.symbol}
           />
           <Select
-            onChange={value => setAction(value)}
+            onChange={value => {
+              setTradeData({ ...tradeData, action: value })
+            }}
             options={[
               { label: 'Buy / Long', value: 'buy' },
               { label: 'Sell / Short', value: 'sell' }
             ]}
             placeholder="Choose one"
             label="Action"
-            value={action}
+            value={tradeData.action}
             fullWidth
           />
-          <DateTimePicker label="Date" onChange={value => setDate(value)} value={date} fullWidth />
+          <DateTimePicker
+            label="Date"
+            onChange={value => {
+              setTradeData({ ...tradeData, date: value })
+            }}
+            value={tradeData.date}
+            fullWidth
+          />
           <Input
-            onChange={e => setPrice(e.target.value)}
-            value={price}
+            onChange={e => {
+              setTradeData({ ...tradeData, price: e.target.value })
+            }}
+            value={tradeData.price}
             type="number"
             name="price"
             placeholder="Price"
@@ -80,8 +81,10 @@ function TradeModal({
             fullWidth
           />
           <Input
-            value={quantity}
-            onChange={e => setQuantity(e.target.value)}
+            value={tradeData.quantity}
+            onChange={e => {
+              setTradeData({ ...tradeData, quantity: e.target.value })
+            }}
             name="quantity"
             type="number"
             placeholder="Quantity"
@@ -89,8 +92,11 @@ function TradeModal({
             fullWidth
           />
           <Input
-            value={fee}
-            onChange={e => setFee(e.target.value)}
+            value={tradeData.fee}
+            onChange={e => {
+              setTradeData({ ...tradeData, fee: e.target.value })
+              // setFee(e.target.value)
+            }}
             name="fee"
             type="number"
             placeholder="Fee"
@@ -103,7 +109,15 @@ function TradeModal({
         Cancel
       </Modal.Action>
       <Modal.Action
-        disabled={!exchange || !symbol || !date || !price || !quantity || !fee || !action}
+        disabled={
+          !tradeData.exchange ||
+          !tradeData.symbol ||
+          !tradeData.date ||
+          !tradeData.price ||
+          !tradeData.quantity ||
+          !tradeData.fee ||
+          !tradeData.action
+        }
         onClick={handleCreateTrade}
       >
         Submit
@@ -113,47 +127,39 @@ function TradeModal({
 }
 
 type TradeModalProps = {
+  tradeData: {
+    exchange: string
+    symbol: string
+    date: string
+    price: string
+    quantity: string
+    fee: string
+    action: string
+  }
+  setTradeData: (e: {
+    exchange: string
+    symbol: string
+    date: string
+    price: string
+    quantity: string
+    fee: string
+    action: string
+  }) => void
   handleCreateTrade: () => void
   setExchangesRelated: (e: { label: string; value: string }[]) => void
   setIsTradeModalOpen: (e: boolean) => void
-  setAction: (e: string) => void
-  setExchange: (e: string) => void
-  setSymbol: (e: string) => void
-  setDate: (e: string) => void
-  setPrice: (e: string) => void
-  setQuantity: (e: string) => void
-  setFee: (e: string) => void
   isTradeModalOpen: boolean
-  action: string
-  exchange: string
-  symbol: string
-  date: string
-  price: string
-  quantity: string
-  fee: string
   exchangesRelated: { label: string; value: string }[]
   exchangesAll: { label: string; value: string }[]
 }
 
 TradeModal.propTypes = {
+  tradeData: PropTypes.object.isRequired,
+  setTradeData: PropTypes.func.isRequired,
   handleCreateTrade: PropTypes.func.isRequired,
   setExchangesRelated: PropTypes.func.isRequired,
   setIsTradeModalOpen: PropTypes.func.isRequired,
-  setAction: PropTypes.func.isRequired,
-  setExchange: PropTypes.func.isRequired,
-  setSymbol: PropTypes.func.isRequired,
-  setDate: PropTypes.func.isRequired,
-  setPrice: PropTypes.func.isRequired,
-  setQuantity: PropTypes.func.isRequired,
-  setFee: PropTypes.func.isRequired,
   isTradeModalOpen: PropTypes.bool.isRequired,
-  action: PropTypes.string.isRequired,
-  exchange: PropTypes.string.isRequired,
-  symbol: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
-  quantity: PropTypes.string.isRequired,
-  fee: PropTypes.string.isRequired,
   exchangesRelated: PropTypes.array.isRequired,
   exchangesAll: PropTypes.array.isRequired
 }
