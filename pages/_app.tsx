@@ -15,7 +15,15 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [themeType, setThemeType] = useState('')
 
   useEffect(() => {
-    setThemeType(cookies.get('themeType'))
+    const themeType = cookies.get('themeType')
+
+    if (!themeType) {
+      !themeType && cookies.set('themeType', 'dark', { path: '/' })
+      setThemeType(cookies.get('themeType') || 'dark')
+    } else {
+      !themeType && cookies.set('themeType', themeType, { path: '/' })
+      setThemeType(themeType)
+    }
   }, [])
 
   function toggleDarkMode(): void {
