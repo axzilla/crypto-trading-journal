@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "next build && npm run migrate:latest",
     "start": "next start",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "migrate:latest": "knex migrate:latest"
