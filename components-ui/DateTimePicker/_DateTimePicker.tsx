@@ -17,20 +17,13 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   }
 }))
 
-type DateTimePickerProps = {
-  onChange?: (e: string) => void
-  value?: string
-  label?: string
-  fullWidth?: boolean
-}
-
 export default function DateTimePicker({
   onChange,
   value,
   label,
   fullWidth,
   ...rest
-}: DateTimePickerProps): JSX.Element {
+}: Props): JSX.Element {
   const classes = useStyles()
 
   return (
@@ -48,6 +41,13 @@ export default function DateTimePicker({
       </div>
     </div>
   )
+}
+
+type Props = {
+  onChange?: (e: string) => void
+  value?: string
+  label?: string
+  fullWidth?: boolean
 }
 
 DateTimePicker.propTypes = {

@@ -1,17 +1,16 @@
+// Packages
 import React from 'react'
 import PropTypes from 'prop-types'
 import { getSession } from 'next-auth/client'
 import { GetServerSideProps } from 'next'
 
+// Layouts
 import { App as AppLayout } from './../../layouts'
+
+// Views
 import { TradeFeed as TradeFeedView } from './../../views'
 
-type DashboardProps = {
-  toggleDarkMode: () => void
-  themeType: string
-}
-
-function Dashboard({ toggleDarkMode, themeType }: DashboardProps): JSX.Element {
+function Dashboard({ toggleDarkMode, themeType }: Props): JSX.Element {
   return (
     <AppLayout toggleDarkMode={toggleDarkMode} themeType={themeType}>
       <TradeFeedView />
@@ -28,6 +27,11 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   }
 
   return { props: { session } }
+}
+
+type Props = {
+  toggleDarkMode: () => void
+  themeType: string
 }
 
 Dashboard.propTypes = {

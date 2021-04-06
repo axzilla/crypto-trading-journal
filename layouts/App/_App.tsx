@@ -4,13 +4,7 @@ import PropTypes from 'prop-types'
 // Local Components
 import { Header, Footer } from './components'
 
-type AppProps = {
-  children: JSX.Element
-  toggleDarkMode: () => void
-  themeType: string
-}
-
-function App({ children, toggleDarkMode, themeType }: AppProps): JSX.Element {
+function App({ children, toggleDarkMode, themeType }: Props): JSX.Element {
   return (
     <>
       <Header toggleDarkMode={toggleDarkMode} themeType={themeType} />
@@ -20,8 +14,16 @@ function App({ children, toggleDarkMode, themeType }: AppProps): JSX.Element {
   )
 }
 
+type Props = {
+  children: JSX.Element
+  toggleDarkMode: () => void
+  themeType: string
+}
+
 App.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  toggleDarkMode: PropTypes.func.isRequired,
+  themeType: PropTypes.string.isRequired
 }
 
 export default App

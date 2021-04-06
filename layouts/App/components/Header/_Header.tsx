@@ -90,12 +90,7 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   }
 }))
 
-type MenuProps = {
-  toggleDarkMode: () => void
-  themeType: string
-}
-
-function Menu({ toggleDarkMode, themeType }: MenuProps): JSX.Element {
+function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
   const classes = useStyles()
   const [fixed, setFixed] = useState(false)
   const [session] = useSession()
@@ -154,6 +149,11 @@ function Menu({ toggleDarkMode, themeType }: MenuProps): JSX.Element {
       </nav>
     </>
   )
+}
+
+type Props = {
+  toggleDarkMode: () => void
+  themeType: string
 }
 
 Menu.propTypes = {

@@ -11,16 +11,6 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf }
 }))
 
-type InputProps = {
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  value?: string
-  type?: string
-  name?: string
-  placeholder?: string
-  label?: string
-  fullWidth?: boolean
-}
-
 export default function Input({
   onChange,
   value,
@@ -30,7 +20,7 @@ export default function Input({
   label,
   fullWidth,
   ...rest
-}: InputProps): JSX.Element {
+}: Props): JSX.Element {
   const classes = useStyles()
 
   return (
@@ -65,6 +55,16 @@ export default function Input({
       )}
     </div>
   )
+}
+
+type Props = {
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  value?: string
+  type?: string
+  name?: string
+  placeholder?: string
+  label?: string
+  fullWidth?: boolean
 }
 
 Input.propTypes = {
