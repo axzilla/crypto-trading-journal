@@ -7,11 +7,11 @@ import moment from 'moment'
 import { useSession } from 'next-auth/client'
 
 // Geist UI
-import { GeistUIThemes, Button, Modal, Grid, Table, Tag, Spacer, Text } from '@geist-ui/react'
+import { GeistUIThemes, Button, Modal, Table, Tag, Spacer, Text } from '@geist-ui/react'
 import { Trash as TrashIcon, Edit as EditIcon } from '@geist-ui/react-icons'
 
-// Components UI
-import { Input, Autocomplete, Select, DateTimePicker } from './../../components-ui'
+// Components Global
+import { TradeModal } from '../../components'
 
 // Utils
 import makeStyles from '../../utils/makeStyles'
@@ -56,7 +56,7 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
 function Header(): JSX.Element {
   const classes = useStyles()
   const [session] = useSession()
-  const [isCreateTradeModalOpen, setIsCreateTradeModalOpen] = useState(false)
+  const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
   const [isDeleteTradeModalOpen, setIsDeleteTradeModalOpen] = useState(false)
 
   const [exchangesAll, setExchangesAll] = useState([])
@@ -139,7 +139,6 @@ function Header(): JSX.Element {
 
   if (error) console.log('failed to load') // eslint-disable-line
   if (!data) console.log('loading') // eslint-disable-line
-  if (data) console.log(data.tradesByUser) // eslint-disable-line
 
   useEffect(() => {
     handleGetExchanges()
@@ -185,7 +184,7 @@ function Header(): JSX.Element {
 
       const { createTrade } = await request('/api/graphql', CREATE_TRADE_MUTATION, tradeData)
 
-      setIsCreateTradeModalOpen(false)
+      setIsTradeModalOpen(false)
       resetForm()
       mutate()
       console.log(createTrade) // eslint-disable-line
@@ -209,7 +208,7 @@ function Header(): JSX.Element {
       <div className={classes.content}>
         <div className={classes.name}>
           <div className={classes.title}>
-            <Button onClick={() => setIsCreateTradeModalOpen(true)} type="secondary" auto>
+            <Button onClick={() => setIsTradeModalOpen(true)} type="secondary" auto>
               Add Trade
             </Button>
           </div>
@@ -270,89 +269,33 @@ function Header(): JSX.Element {
       </div>
 
       {/* Create Trade Modal */}
-      <Modal open={isCreateTradeModalOpen} onClose={() => setIsCreateTradeModalOpen(false)}>
-        <Modal.Title>Add Trade</Modal.Title>
-        <Modal.Content>
-          <Grid.Container justify="center">
-            <Autocomplete
-              onSearch={value => {
-                if (!value) return setExchangesRelated([])
-                const relatedOptions = exchangesAll.filter(item => {
-                  return item.value.toLowerCase().includes(value.toLowerCase())
-                })
-                setExchangesRelated(relatedOptions)
-                setExchange(value)
-              }}
-              value={exchange}
-              options={exchangesRelated}
-              placeholder="Start typing"
-              label="Exchange"
-              fullWidth
-            />
-            <Input
-              onChange={e => setSymbol(e.target.value.toUpperCase())}
-              name="symbol"
-              placeholder="e.g. BTCUSD"
-              label="Symbol"
-              fullWidth
-              value={symbol}
-            />
-            <Select
-              onChange={value => setAction(value)}
-              options={[
-                { label: 'Buy / Long', value: 'buy' },
-                { label: 'Sell / Short', value: 'sell' }
-              ]}
-              placeholder="Choose one"
-              label="Action"
-              value={action}
-              fullWidth
-            />
-            <DateTimePicker
-              label="Date"
-              onChange={value => setDate(value)}
-              value={date}
-              fullWidth
-            />
-            <Input
-              onChange={e => setPrice(e.target.value)}
-              value={price}
-              type="number"
-              name="price"
-              placeholder="Price"
-              label="Price"
-              fullWidth
-            />
-            <Input
-              value={quantity}
-              onChange={e => setQuantity(e.target.value)}
-              name="quantity"
-              type="number"
-              placeholder="Quantity"
-              label="Quantity"
-              fullWidth
-            />
-            <Input
-              value={fee}
-              onChange={e => setFee(e.target.value)}
-              name="fee"
-              type="number"
-              placeholder="Fee"
-              label="Fee"
-              fullWidth
-            />
-          </Grid.Container>
-        </Modal.Content>
-        <Modal.Action passive onClick={() => setIsCreateTradeModalOpen(false)}>
-          Cancel
-        </Modal.Action>
-        <Modal.Action
-          disabled={!exchange || !symbol || !date || !price || !quantity || !fee || !action}
-          onClick={handleCreateTrade}
-        >
-          Submit
-        </Modal.Action>
-      </Modal>
+      <TradeModal
+        isTradeModalOpen={isTradeModalOpen}
+        setIsTradeModalOpen={setIsTradeModalOpen}
+        //
+        action={action}
+        exchange={exchange}
+        symbol={symbol}
+        date={date}
+        price={price}
+        quantity={quantity}
+        fee={fee}
+        //
+        setAction={setAction}
+        setExchange={setExchange}
+        setSymbol={setSymbol}
+        setDate={setDate}
+        setPrice={setPrice}
+        setQuantity={setQuantity}
+        setFee={setFee}
+        //
+        exchangesRelated={exchangesRelated}
+        setExchangesRelated={setExchangesRelated}
+        //
+        exchangesAll={exchangesAll}
+        //
+        handleCreateTrade={handleCreateTrade}
+      />
 
       {/* Delete Trade Modal */}
       <Modal open={isDeleteTradeModalOpen} onClose={() => setIsDeleteTradeModalOpen(false)}>
