@@ -2,13 +2,14 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import useSWR from 'swr'
+import { useRouter } from 'next/router'
 import { request } from 'graphql-request'
 import moment from 'moment'
 import { useSession } from 'next-auth/client'
 
 // Geist UI
 import { GeistUIThemes, Button, Modal, Table, Tag, Spacer, Text } from '@geist-ui/react'
-import { Trash as TrashIcon, Edit as EditIcon } from '@geist-ui/react-icons'
+import { Trash as TrashIcon, Eye as EyeIcon } from '@geist-ui/react-icons'
 
 // Components Global
 import { TradeModal } from '../../components'
@@ -55,6 +56,7 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
 
 function Header(): JSX.Element {
   const classes = useStyles()
+  const router = useRouter()
   const [session] = useSession()
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
   const [isDeleteTradeModalOpen, setIsDeleteTradeModalOpen] = useState(false)
@@ -249,7 +251,12 @@ function Header(): JSX.Element {
                         size="small"
                       />
                       <Spacer x={0.5} />
-                      <Button iconRight={<EditIcon />} auto size="small" />
+                      <Button
+                        onClick={() => router.push(`/trades/${uuid}`)}
+                        iconRight={<EyeIcon />}
+                        auto
+                        size="small"
+                      />
                     </>
                   )
                 }
@@ -264,7 +271,7 @@ function Header(): JSX.Element {
           <Table.Column prop="fee" label="fee" />
           <Table.Column prop="date" label="date" />
           <Table.Column prop="status" label="status" />
-          <Table.Column prop="actions" label="actions" />
+          <Table.Column prop="actions" />
         </Table>
       </div>
 
