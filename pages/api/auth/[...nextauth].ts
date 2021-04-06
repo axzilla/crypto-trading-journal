@@ -24,18 +24,19 @@ export default NextAuth({
       from: process.env.EMAIL_FROM
     })
   ],
-  // database: process.env.DATABASE_URL,
   secret: process.env.SECRET,
   session: { jwt: true },
   adapter: Adapters.TypeORM.Adapter(
-    // The first argument should be a database connection string or TypeORM config object
-    process.env.DATABASE_URL,
-    // The second argument can be used to pass custom models and schemas
     {
-      models: {
-        User: Models.User
-      }
-    }
+      database: process.env.DATABASE_NAME,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      host: process.env.DATABASE_HOST,
+      port: process.env.DATABASE_PORT,
+      charset: 'utf8',
+      ssl: { rejectUnauthorized: false }
+    },
+    { models: { User: Models.User } }
   ),
 
   callbacks: {
