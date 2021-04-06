@@ -3,7 +3,9 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\""
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "knex": "knex migrate:latest",
+    "postinstall": "npm run knex"
   },
   "dependencies": {
     "@geist-ui/react": "2.1.3",
