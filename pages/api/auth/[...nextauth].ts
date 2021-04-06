@@ -28,6 +28,7 @@ export default NextAuth({
   session: { jwt: true },
   adapter: Adapters.TypeORM.Adapter(
     {
+      type: 'postgres',
       database: process.env.DATABASE_NAME,
       user: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
