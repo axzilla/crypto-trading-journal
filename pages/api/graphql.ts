@@ -21,6 +21,7 @@ const typeDefs = gql`
 
   type Query {
     tradesByUser(user: String!): [Trade!]!
+    tradeByUuid(uuid: String!): [Trade!]!
   }
 
   type Mutation {
@@ -43,6 +44,9 @@ const resolvers = {
   Query: {
     tradesByUser: (_: unknown, { user }: never) => {
       return db.select('*').from('trades').where({ user })
+    },
+    tradeByUuid: (_: unknown, { uuid }: never) => {
+      return db.select('*').from('trades').where({ uuid })
     }
   },
   Mutation: {
