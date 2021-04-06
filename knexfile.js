@@ -10,7 +10,16 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: {
+      connection: {
+        database: process.env.DATABASE_NAME,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        host: process.env.DATABASE_HOST,
+        port: process.env.DATABASE_PORT,
+        charset: 'utf8'
+      }
+    },
     migrations: { directory: __dirname + '/knex/migrations' },
     seeds: { directory: __dirname + '/knex/seeds' }
   }
