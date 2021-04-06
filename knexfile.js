@@ -16,7 +16,8 @@ module.exports = {
       password: process.env.DATABASE_PASSWORD,
       host: process.env.DATABASE_HOST,
       port: process.env.DATABASE_PORT,
-      charset: 'utf8'
+      charset: 'utf8',
+      ssl: true
     },
     migrations: { directory: __dirname + '/knex/migrations' },
     seeds: { directory: __dirname + '/knex/seeds' }
