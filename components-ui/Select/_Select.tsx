@@ -10,15 +10,6 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf }
 }))
 
-type SelectProps = {
-  onChange?: (value: string) => void
-  options: { label: string; value: string }[]
-  placeholder?: string
-  label?: string
-  value?: string | string[]
-  fullWidth?: boolean
-}
-
 export default function SelectField({
   onChange,
   options,
@@ -27,7 +18,7 @@ export default function SelectField({
   value,
   fullWidth,
   ...rest
-}: SelectProps): JSX.Element {
+}: Props): JSX.Element {
   const classes = useStyles()
 
   return (
@@ -53,10 +44,20 @@ export default function SelectField({
   )
 }
 
+type Props = {
+  onChange?: (value: string) => void
+  options: { label: string; value: string }[]
+  placeholder?: string
+  label?: string
+  value: string | string[]
+  fullWidth?: boolean
+}
+
 SelectField.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
   placeholder: PropTypes.string,
   label: PropTypes.string,
+  value: PropTypes.array.isRequired,
   fullWidth: PropTypes.bool
 }

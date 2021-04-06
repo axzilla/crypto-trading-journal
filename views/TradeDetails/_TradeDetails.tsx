@@ -106,6 +106,4 @@ function TradeDetails(): JSX.Element {
   )
 }
 
-TradeDetails.propTypes = {}
-
 export default TradeDetails

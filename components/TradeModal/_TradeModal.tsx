@@ -1,3 +1,4 @@
+// Packages
 import PropTypes from 'prop-types'
 
 // Geist UI
@@ -15,7 +16,7 @@ function TradeModal({
   isTradeModalOpen,
   exchangesRelated,
   exchangesAll
-}: TradeModalProps): JSX.Element {
+}: Props): JSX.Element {
   return (
     <Modal open={isTradeModalOpen} onClose={() => setIsTradeModalOpen(false)}>
       <Modal.Title>Add Trade</Modal.Title>
@@ -95,7 +96,6 @@ function TradeModal({
             value={tradeData.fee}
             onChange={e => {
               setTradeData({ ...tradeData, fee: e.target.value })
-              // setFee(e.target.value)
             }}
             name="fee"
             type="number"
@@ -126,7 +126,7 @@ function TradeModal({
   )
 }
 
-type TradeModalProps = {
+type Props = {
   tradeData: {
     exchange: string
     symbol: string

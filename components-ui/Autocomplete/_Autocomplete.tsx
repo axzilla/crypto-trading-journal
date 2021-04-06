@@ -11,15 +11,6 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   autocomplete: { maxWidth: '100vw' }
 }))
 
-type AutocompleteProps = {
-  onSearch: (value: string) => void
-  value: string
-  options: { label: string; value: string }[]
-  placeholder?: string
-  label?: string
-  fullWidth?: boolean
-}
-
 export default function Autocomplete({
   onSearch,
   value,
@@ -28,7 +19,7 @@ export default function Autocomplete({
   label,
   fullWidth,
   ...rest
-}: AutocompleteProps): JSX.Element {
+}: Props): JSX.Element {
   const classes = useStyles()
 
   return (
@@ -46,6 +37,15 @@ export default function Autocomplete({
       />
     </div>
   )
+}
+
+type Props = {
+  onSearch: (value: string) => void
+  value: string
+  options: { label: string; value: string }[]
+  placeholder?: string
+  label?: string
+  fullWidth?: boolean
 }
 
 Autocomplete.propTypes = {

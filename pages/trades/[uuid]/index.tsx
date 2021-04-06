@@ -9,12 +9,7 @@ import { App as AppLayout } from './../../../layouts'
 // Views
 import { TradeDetails as TradeDetailsView } from './../../../views'
 
-type DashboardProps = {
-  toggleDarkMode: () => void
-  themeType: string
-}
-
-function Dashboard({ toggleDarkMode, themeType }: DashboardProps): JSX.Element {
+function Dashboard({ toggleDarkMode, themeType }: Props): JSX.Element {
   return (
     <AppLayout toggleDarkMode={toggleDarkMode} themeType={themeType}>
       <TradeDetailsView />
@@ -31,6 +26,11 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   }
 
   return { props: { session } }
+}
+
+type Props = {
+  toggleDarkMode: () => void
+  themeType: string
 }
 
 Dashboard.propTypes = {
