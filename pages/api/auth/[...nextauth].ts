@@ -26,19 +26,7 @@ export default NextAuth({
   ],
   secret: process.env.SECRET,
   session: { jwt: true },
-  adapter: Adapters.TypeORM.Adapter(
-    {
-      type: 'postgres',
-      database: process.env.DATABASE_NAME,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      host: process.env.DATABASE_HOST,
-      port: process.env.DATABASE_PORT,
-      ssl: { rejectUnauthorized: false },
-      synchronize: true
-    },
-    { models: { User: Models.User } }
-  ),
+  adapter: Adapters.TypeORM.Adapter(process.env.DATABASE_URL, { models: { User: Models.User } }),
 
   callbacks: {
     jwt: async (token, user) => {
