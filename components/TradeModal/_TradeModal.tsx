@@ -65,7 +65,7 @@ function TradeModal({
           <DateTimePicker
             label="Date"
             onChange={value => {
-              setTradeData({ ...tradeData, date: value })
+              setTradeData({ ...tradeData, date: new Date(value) })
             }}
             value={tradeData.date}
             fullWidth
@@ -130,7 +130,7 @@ type Props = {
   tradeData: {
     exchange: string
     symbol: string
-    date: string
+    date: Date
     price: string
     quantity: string
     fee: string
@@ -139,7 +139,7 @@ type Props = {
   setTradeData: (e: {
     exchange: string
     symbol: string
-    date: string
+    date: Date
     price: string
     quantity: string
     fee: string

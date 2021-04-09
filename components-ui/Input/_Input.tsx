@@ -5,7 +5,7 @@ import { GeistUIThemes, Input as GeistInput, Text } from '@geist-ui/react'
 import NumberFormat from 'react-number-format'
 
 // Utils
-import makeStyles from '../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf }
@@ -24,7 +24,7 @@ export default function Input({
   const classes = useStyles()
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: fullWidth && '100%' }}>
       {label && <Text className={classes.label}>{label}</Text>}
 
       {(!type || type === 'text') && (

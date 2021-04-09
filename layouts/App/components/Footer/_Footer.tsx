@@ -2,7 +2,7 @@ import React from 'react'
 import { GeistUIThemes, Text, Grid, Spacer } from '@geist-ui/react'
 import { Heart } from '@geist-ui/react-icons'
 
-import makeStyles from '../../../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   root: {
