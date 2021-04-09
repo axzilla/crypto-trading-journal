@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["components/*"],
-      "@components-ui/*": ["components-ui/*"]
+      "@components-ui/*": ["components-ui/*"],
+      "@utils/*": ["utils/*"]
     },
     "target": "es5",
     "lib": [

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { GeistUIThemes, Select, Text } from '@geist-ui/react'
 
 // Utils
-import makeStyles from '../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf }
@@ -58,6 +58,6 @@ SelectField.propTypes = {
   options: PropTypes.array.isRequired,
   placeholder: PropTypes.string,
   label: PropTypes.string,
-  value: PropTypes.array.isRequired,
+  value: PropTypes.string.isRequired,
   fullWidth: PropTypes.bool
 }

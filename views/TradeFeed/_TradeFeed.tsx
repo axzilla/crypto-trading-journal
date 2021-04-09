@@ -4,18 +4,18 @@ import axios from 'axios'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import { request } from 'graphql-request'
-import moment from 'moment'
 import { useSession } from 'next-auth/client'
 
 // Geist UI
-import { GeistUIThemes, Button, Modal, Table, Tag, Spacer, Text } from '@geist-ui/react'
+import { GeistUIThemes, Button, Modal, Table, Tag, Spacer, Text, Grid } from '@geist-ui/react'
 import { Trash as TrashIcon, Eye as EyeIcon } from '@geist-ui/react-icons'
 
 // Components Global
 import { TradeModal } from '../../components'
 
 // Utils
-import makeStyles from '../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
+import nbs from 'utils/nbs'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   content: {
@@ -65,35 +65,41 @@ function TradeFeed(): JSX.Element {
   const [tradeData, setTradeData] = useState({
     exchange: '',
     symbol: '',
-    date: '',
+    date: null,
     price: '',
     quantity: '',
     fee: '',
     action: ''
   })
 
-  const TRADES_BY_USER_QUERY = /* GraphQL */ `
-    query tradesByUser($user: String!) {
-      tradesByUser(user: $user) {
-        uuid
-        user
+  const TRADES_AND_ORDERS_BY_USER_ID = /* GraphQL */ `
+    query tradesAndOrderByUserId($user_id: String!) {
+      tradesByUserId(user_id: $user_id) {
         id
+        user_id
         symbol
         exchange
+        status
+        created_at
+      }
+
+      ordersByUserId(user_id: $user_id) {
+        id
+        user_id
+        trade_id
         action
         date
         price
         quantity
         fee
-        status
-        date_created
+        created_at
       }
     }
   `
 
   const CREATE_TRADE_MUTATION = /* GraphQL */ `
     mutation createTrade(
-      $user: String!
+      $user_id: String!
       $symbol: String!
       $exchange: String!
       $action: String!
@@ -103,7 +109,7 @@ function TradeFeed(): JSX.Element {
       $fee: String!
     ) {
       createTrade(
-        user: $user
+        user_id: $user_id
         symbol: $symbol
         exchange: $exchange
         action: $action
@@ -112,31 +118,24 @@ function TradeFeed(): JSX.Element {
         quantity: $quantity
         fee: $fee
       ) {
-        user
         symbol
-        exchange
-        action
-        date
-        price
-        quantity
-        fee
-        status
       }
     }
   `
 
   const DELETE_TRADE_MUTATION = /* GraphQL */ `
-    mutation deleteTrade($uuid: String!) {
-      deleteTrade(uuid: $uuid) {
-        uuid
+    mutation deleteTrade($id: String!) {
+      deleteTrade(id: $id) {
+        id
       }
     }
   `
 
-  const user = session.user.uuid
+  const user_id = session.user.id
 
-  const { data, error, mutate } = useSWR([TRADES_BY_USER_QUERY, user], (query, user) =>
-    request('/api/graphql', query, { user })
+  const { data, error, mutate } = useSWR(
+    [TRADES_AND_ORDERS_BY_USER_ID, user_id],
+    (query, user_id) => request('/api/graphql', query, { user_id })
   )
 
   if (error) console.log('failed to load') // eslint-disable-line
@@ -165,7 +164,7 @@ function TradeFeed(): JSX.Element {
     setTradeData({
       exchange: '',
       symbol: '',
-      date: '',
+      date: null,
       price: '',
       quantity: '',
       fee: '',
@@ -175,23 +174,22 @@ function TradeFeed(): JSX.Element {
 
   async function handleCreateTrade() {
     try {
-      const { createTrade } = await request('/api/graphql', CREATE_TRADE_MUTATION, {
+      await request('/api/graphql', CREATE_TRADE_MUTATION, {
         ...tradeData,
-        user: session.user.uuid
+        user_id: session.user.id
       })
 
       setIsTradeModalOpen(false)
       resetForm()
       mutate()
-      console.log(createTrade) // eslint-disable-line
     } catch (error) {
       if (error) throw error
     }
   }
 
-  async function handleDeleteTrade(uuid) {
+  async function handleDeleteTrade(id) {
     try {
-      await request('/api/graphql', DELETE_TRADE_MUTATION, { uuid })
+      await request('/api/graphql', DELETE_TRADE_MUTATION, { id })
       mutate()
       setIsDeleteTradeModalOpen(false)
     } catch (error) {
@@ -215,43 +213,36 @@ function TradeFeed(): JSX.Element {
         <Table
           data={
             data &&
-            data.tradesByUser
-              .sort((a, b) => b.date_created - a.date_created)
+            data.tradesByUserId
+              .sort((a, b) => b.created_at - a.created_at)
               .map(trade => {
-                const { exchange, symbol, action, price, quantity, fee, date, status, uuid } = trade
+                // const { exchange, symbol, action, price, quantity, fee, date, status, id } = trade
+                const { exchange, symbol, status, id } = trade
 
                 return {
-                  exchange,
+                  exchange: nbs(exchange),
                   symbol: <Tag type="success">{symbol.toUpperCase()}</Tag>,
-                  action: <Tag type="warning">{action.toUpperCase()}</Tag>,
-                  price,
-                  quantity,
-                  fee,
-                  date: moment
-                    .unix(date / 1000)
-                    .utc()
-                    .format('MMMM D, YYYY, h:mm'),
                   status: (
                     <Tag invert type="warning">
                       {status.toUpperCase()}
                     </Tag>
                   ),
                   actions: (
-                    <>
+                    <Grid.Container wrap="nowrap">
                       <Button
-                        onClick={() => setIsDeleteTradeModalOpen(uuid)}
+                        onClick={() => setIsDeleteTradeModalOpen(id)}
                         iconRight={<TrashIcon />}
                         auto
                         size="small"
                       />
                       <Spacer x={0.5} />
                       <Button
-                        onClick={() => router.push(`/trades/${uuid}`)}
+                        onClick={() => router.push(`/trades/${id}`)}
                         iconRight={<EyeIcon />}
                         auto
                         size="small"
                       />
-                    </>
+                    </Grid.Container>
                   )
                 }
               })
@@ -259,11 +250,6 @@ function TradeFeed(): JSX.Element {
         >
           <Table.Column prop="symbol" label="symbol" />
           <Table.Column prop="exchange" label="exchange" />
-          <Table.Column prop="action" label="action" />
-          <Table.Column prop="price" label="price" />
-          <Table.Column prop="quantity" label="quantity" />
-          <Table.Column prop="fee" label="fee" />
-          <Table.Column prop="date" label="date" />
           <Table.Column prop="status" label="status" />
           <Table.Column prop="actions" />
         </Table>

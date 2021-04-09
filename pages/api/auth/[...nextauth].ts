@@ -1,10 +1,6 @@
 // Packages
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
-import Adapters from 'next-auth/adapters'
-
-// Models
-import Models from '../../../models'
 
 export default NextAuth({
   providers: [
@@ -26,17 +22,23 @@ export default NextAuth({
   ],
   secret: process.env.SECRET,
   session: { jwt: true },
-  adapter: Adapters.TypeORM.Adapter(process.env.DATABASE_URL, { models: { User: Models.User } }),
-
+  database: {
+    type: 'postgres',
+    host: process.env.DATABASE_HOST,
+    port: process.env.DATABASE_PORT,
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME
+  },
   callbacks: {
     jwt: async (token, user) => {
       if (user) {
-        token.uuid = user.uuid
+        token.id = user.id
       }
       return Promise.resolve(token)
     },
     session: async (session, user) => {
-      session.user.uuid = user.uuid
+      session.user.id = user.id
       return Promise.resolve(session)
     }
   },

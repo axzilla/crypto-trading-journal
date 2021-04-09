@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { signOut, useSession } from 'next-auth/client'
 
 // Utils
-import makeStyles from '../../../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
 
 // Geist UI
 import { Button, GeistUIThemes, Link, Popover, Tabs, Avatar, Spacer } from '@geist-ui/react'
