@@ -5,6 +5,7 @@ exports.up = async function (knex) {
     table.uuid('id').primary().unique().notNullable().defaultTo(knex.raw('uuid_generate_v4()'))
     table.uuid('user_id').notNullable()
     table.string('exchange').notNullable()
+    table.string('symbol').notNullable()
     // table.string('side').notNullable()
     // table.string('quantity_total').notNullable()
     // table.string('quantity_open').notNullable()
