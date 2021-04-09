@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { GeistUIThemes, AutoComplete, Text } from '@geist-ui/react'
 
 // Utils
-import makeStyles from '../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf },

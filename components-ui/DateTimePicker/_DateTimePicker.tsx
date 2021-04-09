@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 // Utils
-import makeStyles from '../../utils/makeStyles'
+import makeStyles from 'utils/makeStyles'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf },
@@ -33,9 +33,9 @@ export default function DateTimePicker({
         <DatePicker
           dateFormat="MMMM d, yyyy h:mm aa"
           showTimeSelect
-          timeIntervals={5}
+          timeIntervals={1}
           onChange={onChange}
-          selected={value || ''}
+          selected={value}
           customInput={<GeistInput width={fullWidth && '100%'} {...rest} />}
         />
       </div>
@@ -44,8 +44,8 @@ export default function DateTimePicker({
 }
 
 type Props = {
-  onChange?: (e: string) => void
-  value?: string
+  onChange: (e: string) => void
+  value: Date
   label?: string
   fullWidth?: boolean
 }
