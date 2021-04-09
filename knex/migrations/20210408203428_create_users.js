@@ -7,7 +7,7 @@ exports.up = async function (knex) {
     table.string('email')
     table.timestamp('email_verified')
     table.string('image')
-    table.timestamps(true, true)
+    table.timestamps(true, true).notNullable()
   })
 }
 

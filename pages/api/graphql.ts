@@ -21,7 +21,6 @@ const typeDefs = gql`
     date: String!
     price: String!
     quantity: String!
-    fee: String!
     created_at: String!
   }
 
@@ -41,7 +40,6 @@ const typeDefs = gql`
       date: String!
       price: String!
       quantity: String!
-      fee: String!
     ): Trade!
 
     deleteTrade(id: String!): Trade!
@@ -53,7 +51,6 @@ const typeDefs = gql`
       date: String!
       price: String!
       quantity: String!
-      fee: String!
     ): Order!
 
     updateOrder(
@@ -62,7 +59,6 @@ const typeDefs = gql`
       date: String!
       price: String!
       quantity: String!
-      fee: String!
     ): Order!
 
     deleteOrder(id: String!): Order!
@@ -87,7 +83,7 @@ const resolvers = {
   Mutation: {
     createTrade: async (
       _: unknown,
-      { user_id, symbol, exchange, action, date, price, quantity, fee, status }
+      { user_id, symbol, exchange, action, date, price, quantity, status }
     ) =>
       // { user_id, symbol, exchange, status }
       {
@@ -96,7 +92,7 @@ const resolvers = {
           .returning('*')
 
         await db('orders')
-          .insert({ user_id, trade_id: createdTrade[0].id, action, date, price, quantity, fee })
+          .insert({ user_id, trade_id: createdTrade[0].id, action, date, price, quantity })
           .returning('*')
 
         return createdTrade[0]
@@ -105,16 +101,16 @@ const resolvers = {
       const createdTrade = await db('trades').where({ id }).del().returning('*')
       return createdTrade[0]
     },
-    createOrder: async (_: unknown, { user_id, trade_id, action, date, price, quantity, fee }) => {
+    createOrder: async (_: unknown, { user_id, trade_id, action, date, price, quantity }) => {
       const createdOrder = await db('orders')
-        .insert({ user_id, trade_id, action, date, price, quantity, fee })
+        .insert({ user_id, trade_id, action, date, price, quantity })
         .returning('*')
       return createdOrder[0]
     },
-    updateOrder: async (_, { id, action, date, price, quantity, fee }) => {
+    updateOrder: async (_, { id, action, date, price, quantity }) => {
       const updatedTrade = await db('orders')
         .where({ id })
-        .update({ action, date, price, quantity, fee })
+        .update({ action, date, price, quantity })
         .returning('*')
       return updatedTrade[0]
     },

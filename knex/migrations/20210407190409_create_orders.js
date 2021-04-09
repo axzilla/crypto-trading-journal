@@ -9,8 +9,7 @@ exports.up = async function (knex) {
     table.timestamp('date').notNullable()
     table.string('price').notNullable()
     table.string('quantity').notNullable()
-    table.string('fee').notNullable()
-    table.timestamps(true, true)
+    table.timestamps(true, true).notNullable()
   })
 }
 

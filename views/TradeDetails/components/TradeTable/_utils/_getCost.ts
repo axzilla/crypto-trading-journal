@@ -1,5 +1,5 @@
 function getCost(
-  orders: [{ id: string; action: string; date: Date; price: string; quantity: string; fee: string }]
+  orders: [{ id: string; action: string; date: Date; price: string; quantity: string }]
 ): number {
   const firstCreatedOrder = orders
     .sort((a, b): number => Number(a.date) - Number(b.date))

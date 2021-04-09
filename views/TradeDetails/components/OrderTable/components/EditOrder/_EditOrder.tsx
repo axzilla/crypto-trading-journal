@@ -40,15 +40,8 @@ type EditOrderProps = {
     date: Date
     price: string
     quantity: string
-    fee: string
   }
-  handleUpdateOrder?: (e: {
-    action: string
-    date: Date
-    price: string
-    quantity: string
-    fee: string
-  }) => void
+  handleUpdateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
 }
 
 EditOrder.propTypes = {

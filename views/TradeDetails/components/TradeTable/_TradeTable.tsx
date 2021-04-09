@@ -85,7 +85,6 @@ type TradeTableProps = {
       date: Date
       price: string
       quantity: string
-      fee: string
     }
   ]
 }

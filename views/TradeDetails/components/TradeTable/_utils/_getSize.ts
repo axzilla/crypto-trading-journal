@@ -6,7 +6,6 @@ function getSize(
       date: Date
       price: string
       quantity: string
-      fee: string
     }
   ],
   side: string

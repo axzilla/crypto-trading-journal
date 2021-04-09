@@ -19,8 +19,7 @@ function OrderModal({
     action: '',
     date: new Date(),
     price: '',
-    quantity: '',
-    fee: ''
+    quantity: ''
   })
 
   useEffect(() => {
@@ -80,17 +79,6 @@ function OrderModal({
             label="Quantity"
             fullWidth
           />
-          <Input
-            value={orderData.fee}
-            onChange={e => {
-              setOrderData({ ...orderData, fee: e.target.value })
-            }}
-            name="fee"
-            type="number"
-            placeholder="Fee"
-            label="Fee"
-            fullWidth
-          />
         </Grid.Container>
       </Modal.Content>
       <Modal.Action
@@ -102,13 +90,7 @@ function OrderModal({
         Cancel
       </Modal.Action>
       <Modal.Action
-        disabled={
-          !orderData.date ||
-          !orderData.price ||
-          !orderData.quantity ||
-          !orderData.fee ||
-          !orderData.action
-        }
+        disabled={!orderData.date || !orderData.price || !orderData.quantity || !orderData.action}
         onClick={() => {
           if (order) {
             handleUpdateOrder(orderData)
@@ -126,23 +108,11 @@ function OrderModal({
 }
 
 type Props = {
-  order?: { action: string; date: Date; price: string; quantity: string; fee: string }
+  order?: { action: string; date: Date; price: string; quantity: string }
   isOrderModalOpen: boolean
   setIsOrderModalOpen: (e: boolean) => void
-  handleCreateOrder?: (e: {
-    action: string
-    date: Date
-    price: string
-    quantity: string
-    fee: string
-  }) => void
-  handleUpdateOrder?: (e: {
-    action: string
-    date: Date
-    price: string
-    quantity: string
-    fee: string
-  }) => void
+  handleCreateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
+  handleUpdateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
 }
 
 OrderModal.propTypes = {

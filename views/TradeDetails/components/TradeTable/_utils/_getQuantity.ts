@@ -1,7 +1,5 @@
 function getQuantity(
-  orders: [
-    { id: string; action: string; date: Date; price: string; quantity: string; fee: string }
-  ],
+  orders: [{ id: string; action: string; date: Date; price: string; quantity: string }],
   side: string
 ): number {
   const quantityBuy = orders

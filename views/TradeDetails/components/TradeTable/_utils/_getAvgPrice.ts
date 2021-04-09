@@ -6,7 +6,6 @@ function getAvgPrice(
       date: Date
       price: string
       quantity: string
-      fee: string
     }
   ],
   action: string

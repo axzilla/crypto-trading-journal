@@ -24,14 +24,13 @@ function OrderTable({
       data={orders
         .sort((a, b) => Number(a.date) - Number(b.date))
         .map(order => {
-          const { action, price, quantity, fee, date, id } = order
+          const { action, price, quantity, date, id } = order
 
           return {
             action: <Tag type="warning">{action.toUpperCase()}</Tag>,
             quantity: formatQuantity(Number(quantity)),
             price: `${formatCurrency(Number(price))}`,
             value: `${formatCurrency(Number(price) * Number(quantity))}`,
-            fee: `${formatCurrency(Number(fee))}`,
             date: nbs(moment.unix(Number(date) / 1000).format('MMMM D, YYYY, h:mm')),
             actions: (
               <Grid.Container wrap="nowrap">
@@ -52,7 +51,6 @@ function OrderTable({
       <Table.Column prop="quantity" label="Quantity" />
       <Table.Column prop="price" label="Price" />
       <Table.Column prop="value" label="Value" />
-      <Table.Column prop="fee" label="Fee" />
       <Table.Column prop="date" label="Date" />
       <Table.Column prop="actions" label="actions" />
     </Table>
@@ -67,16 +65,9 @@ type OrderTableProps = {
       date: Date
       price: string
       quantity: string
-      fee: string
     }
   ]
-  handleUpdateOrder?: (e: {
-    action: string
-    date: Date
-    price: string
-    quantity: string
-    fee: string
-  }) => void
+  handleUpdateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
   handleDeleteOrder?: (e: string) => void
 }
 
