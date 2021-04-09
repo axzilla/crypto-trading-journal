@@ -5,30 +5,38 @@ import db from '../../knex/knex'
 
 const typeDefs = gql`
   type Trade {
-    user: String!
-    uuid: String!
-    id: ID!
+    user_id: String!
+    id: String!
     symbol: String!
     exchange: String!
+    status: String!
+    created_at: String!
+  }
+
+  type Order {
+    user_id: String!
+    trade_id: String!
+    id: String!
     action: String!
     date: String!
     price: String!
     quantity: String!
     fee: String!
-    status: String!
-    date_created: String!
+    created_at: String!
   }
 
   type Query {
-    tradesByUser(user: String!): [Trade!]!
-    tradeByUuid(uuid: String!): [Trade!]!
+    tradesByUserId(user_id: String!): [Trade!]!
+    tradeByTradeId(id: String!): [Trade!]!
+    ordersByTradeId(trade_id: String!): [Order!]!
+    ordersByUserId(user_id: String!): [Order!]!
   }
 
   type Mutation {
     createTrade(
-      user: String!
-      symbol: String!
+      user_id: String!
       exchange: String!
+      symbol: String!
       action: String!
       date: String!
       price: String!
@@ -36,31 +44,82 @@ const typeDefs = gql`
       fee: String!
     ): Trade!
 
-    deleteTrade(uuid: String!): Trade!
+    deleteTrade(id: String!): Trade!
+
+    createOrder(
+      user_id: String!
+      trade_id: String!
+      action: String!
+      date: String!
+      price: String!
+      quantity: String!
+      fee: String!
+    ): Order!
+
+    updateOrder(
+      id: String!
+      action: String!
+      date: String!
+      price: String!
+      quantity: String!
+      fee: String!
+    ): Order!
+
+    deleteOrder(id: String!): Order!
   }
 `
 
 const resolvers = {
   Query: {
-    tradesByUser: (_: unknown, { user }: never) => {
-      return db.select('*').from('trades').where({ user })
+    tradesByUserId: async (_: unknown, { user_id }: never) => {
+      return db.select('*').from('trades').where({ user_id })
     },
-    tradeByUuid: (_: unknown, { uuid }: never) => {
-      return db.select('*').from('trades').where({ uuid })
+    tradeByTradeId: (_: unknown, { id }: never) => {
+      return db.select('*').from('trades').where({ id })
+    },
+    ordersByTradeId: async (_: unknown, { trade_id }: never) => {
+      return await db.select('*').from('orders').where({ trade_id })
+    },
+    ordersByUserId: async (_: unknown, { user_id }: never) => {
+      return await db.select('*').from('orders').where({ user_id })
     }
   },
   Mutation: {
     createTrade: async (
       _: unknown,
-      { user, symbol, exchange, action, date, price, quantity, fee, status }
-    ) => {
-      const createdTrade = await db('trades')
-        .insert({ user, symbol, exchange, action, date, price, quantity, fee, status })
-        .returning('*')
+      { user_id, symbol, exchange, action, date, price, quantity, fee, status }
+    ) =>
+      // { user_id, symbol, exchange, status }
+      {
+        const createdTrade = await db('trades')
+          .insert({ user_id, exchange, symbol, status })
+          .returning('*')
+
+        await db('orders')
+          .insert({ user_id, trade_id: createdTrade[0].id, action, date, price, quantity, fee })
+          .returning('*')
+
+        return createdTrade[0]
+      },
+    deleteTrade: async (_, { id }) => {
+      const createdTrade = await db('trades').where({ id }).del().returning('*')
       return createdTrade[0]
     },
-    deleteTrade: async (_, { uuid }) => {
-      const createdTrade = await db('trades').where({ uuid }).del().returning('*')
+    createOrder: async (_: unknown, { user_id, trade_id, action, date, price, quantity, fee }) => {
+      const createdOrder = await db('orders')
+        .insert({ user_id, trade_id, action, date, price, quantity, fee })
+        .returning('*')
+      return createdOrder[0]
+    },
+    updateOrder: async (_, { id, action, date, price, quantity, fee }) => {
+      const updatedTrade = await db('orders')
+        .where({ id })
+        .update({ action, date, price, quantity, fee })
+        .returning('*')
+      return updatedTrade[0]
+    },
+    deleteOrder: async (_, { id }) => {
+      const createdTrade = await db('orders').where({ id }).del().returning('*')
       return createdTrade[0]
     }
   }
