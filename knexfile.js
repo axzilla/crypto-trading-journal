@@ -21,9 +21,9 @@ module.exports = {
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       port: process.env.DATABASE_PORT,
-      ssl: true,
-      extra: { ssl: { rejectUnauthorized: false } }
-      // ssl: { require: true, rejectUnauthorized: false }
+      // ssl: true,
+      // extra: { ssl: { rejectUnauthorized: false } }
+      ssl: { require: true, rejectUnauthorized: false }
     },
     migrations: { directory: __dirname + '/knex/migrations' }
   }
