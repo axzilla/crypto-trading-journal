@@ -92,17 +92,6 @@ function TradeModal({
             label="Quantity"
             fullWidth
           />
-          <Input
-            value={tradeData.fee}
-            onChange={e => {
-              setTradeData({ ...tradeData, fee: e.target.value })
-            }}
-            name="fee"
-            type="number"
-            placeholder="Fee"
-            label="Fee"
-            fullWidth
-          />
         </Grid.Container>
       </Modal.Content>
       <Modal.Action passive onClick={() => setIsTradeModalOpen(false)}>
@@ -115,7 +104,6 @@ function TradeModal({
           !tradeData.date ||
           !tradeData.price ||
           !tradeData.quantity ||
-          !tradeData.fee ||
           !tradeData.action
         }
         onClick={handleCreateTrade}
@@ -133,7 +121,6 @@ type Props = {
     date: Date
     price: string
     quantity: string
-    fee: string
     action: string
   }
   setTradeData: (e: {
@@ -142,7 +129,6 @@ type Props = {
     date: Date
     price: string
     quantity: string
-    fee: string
     action: string
   }) => void
   handleCreateTrade: () => void

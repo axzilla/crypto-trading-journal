@@ -68,7 +68,6 @@ function TradeFeed(): JSX.Element {
     date: null,
     price: '',
     quantity: '',
-    fee: '',
     action: ''
   })
 
@@ -91,7 +90,6 @@ function TradeFeed(): JSX.Element {
         date
         price
         quantity
-        fee
         created_at
       }
     }
@@ -106,7 +104,6 @@ function TradeFeed(): JSX.Element {
       $date: String!
       $price: String!
       $quantity: String!
-      $fee: String!
     ) {
       createTrade(
         user_id: $user_id
@@ -116,7 +113,6 @@ function TradeFeed(): JSX.Element {
         date: $date
         price: $price
         quantity: $quantity
-        fee: $fee
       ) {
         symbol
       }
@@ -167,7 +163,6 @@ function TradeFeed(): JSX.Element {
       date: null,
       price: '',
       quantity: '',
-      fee: '',
       action: ''
     })
   }
@@ -216,7 +211,6 @@ function TradeFeed(): JSX.Element {
             data.tradesByUserId
               .sort((a, b) => b.created_at - a.created_at)
               .map(trade => {
-                // const { exchange, symbol, action, price, quantity, fee, date, status, id } = trade
                 const { exchange, symbol, status, id } = trade
 
                 return {

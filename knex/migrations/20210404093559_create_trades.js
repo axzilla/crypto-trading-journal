@@ -6,7 +6,7 @@ exports.up = async function (knex) {
     table.uuid('user_id').notNullable()
     table.string('exchange').notNullable()
     table.string('symbol').notNullable()
-    // table.string('side').notNullable()
+    table.string('side').notNullable()
     // table.string('quantity_total').notNullable()
     // table.string('quantity_open').notNullable()
     // table.string('cost').notNullable()
@@ -17,7 +17,7 @@ exports.up = async function (knex) {
     // table.string('return_percent').notNullable()
     // table.string('return_net').notNullable()
     table.string('status').notNullable().defaultTo('open')
-    table.timestamps(true, true)
+    table.timestamps(true, true).notNullable()
   })
 }
 

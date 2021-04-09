@@ -6,7 +6,6 @@ function getSide(
       date: Date
       price: string
       quantity: string
-      fee: string
     }
   ]
 ): string {

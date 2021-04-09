@@ -51,7 +51,6 @@ function TradeDetails(): JSX.Element {
         date
         price
         quantity
-        fee
         created_at
       }
     }
@@ -74,7 +73,6 @@ function TradeDetails(): JSX.Element {
         $date: String!
         $price: String!
         $quantity: String!
-        $fee: String!
       ) {
         createOrder(
           user_id: $user_id
@@ -83,7 +81,6 @@ function TradeDetails(): JSX.Element {
           date: $date
           price: $price
           quantity: $quantity
-          fee: $fee
         ) {
           id
           user_id
@@ -92,7 +89,6 @@ function TradeDetails(): JSX.Element {
           date
           price
           quantity
-          fee
         }
       }
     `
@@ -106,7 +102,7 @@ function TradeDetails(): JSX.Element {
     mutate()
   }
 
-  async function handleUpdateOrder({ id, action, date, price, quantity, fee }) {
+  async function handleUpdateOrder({ id, action, date, price, quantity }) {
     const UPDATE_ORDER_MUTATION = /* GraphQL */ `
       mutation updateOrder(
         $id: String!
@@ -114,27 +110,18 @@ function TradeDetails(): JSX.Element {
         $date: String!
         $price: String!
         $quantity: String!
-        $fee: String!
       ) {
-        updateOrder(
-          id: $id
-          action: $action
-          date: $date
-          price: $price
-          quantity: $quantity
-          fee: $fee
-        ) {
+        updateOrder(id: $id, action: $action, date: $date, price: $price, quantity: $quantity) {
           id
           action
           date
           price
           quantity
-          fee
         }
       }
     `
 
-    await request('/api/graphql', UPDATE_ORDER_MUTATION, { id, action, date, price, quantity, fee })
+    await request('/api/graphql', UPDATE_ORDER_MUTATION, { id, action, date, price, quantity })
     mutate()
   }
 

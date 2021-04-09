@@ -7,7 +7,7 @@ exports.up = async function (knex) {
     table.timestamp('expires').notNullable()
     table.string('session_token').notNullable()
     table.string('access_token').notNullable()
-    table.timestamps(true, true)
+    table.timestamps(true, true).notNullable()
   })
 }
 
