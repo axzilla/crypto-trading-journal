@@ -6,7 +6,7 @@ exports.up = async function (knex) {
     table.string('identifier').notNullable()
     table.string('token').notNullable()
     table.timestamp('expires').notNullable()
-    table.timestamps(true, true).notNullable()
+    table.timestamps(true, true)
   })
 }
 

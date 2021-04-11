@@ -5,11 +5,11 @@ exports.up = async function (knex) {
     table.uuid('id').primary().unique().notNullable().defaultTo(knex.raw('uuid_generate_v4()'))
     table.uuid('user_id').notNullable()
     table.uuid('trade_id').notNullable()
-    table.string('action').notNullable()
+    table.string('side').notNullable()
     table.timestamp('date').notNullable()
     table.string('price').notNullable()
     table.string('quantity').notNullable()
-    table.timestamps(true, true).notNullable()
+    table.timestamps(true, true)
   })
 }
 

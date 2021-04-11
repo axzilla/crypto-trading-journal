@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 // Geist UI
 import { Modal, Grid } from '@geist-ui/react'
 
-// // Components UI
+// Components UI
 import { Input, Select, DateTimePicker } from '../../components-ui'
 
 function OrderModal({
@@ -16,7 +16,7 @@ function OrderModal({
   handleUpdateOrder
 }: Props): JSX.Element {
   const [orderData, setOrderData] = useState({
-    action: '',
+    side: '',
     date: new Date(),
     price: '',
     quantity: ''
@@ -38,15 +38,15 @@ function OrderModal({
         <Grid.Container justify="center">
           <Select
             onChange={value => {
-              setOrderData({ ...orderData, action: value })
+              setOrderData({ ...orderData, side: value })
             }}
             options={[
               { label: 'Buy / Long', value: 'buy' },
               { label: 'Sell / Short', value: 'sell' }
             ]}
             placeholder="Choose one"
-            label="Action"
-            value={orderData.action}
+            label="Side"
+            value={orderData.side}
             fullWidth
           />
           <DateTimePicker
@@ -90,7 +90,7 @@ function OrderModal({
         Cancel
       </Modal.Action>
       <Modal.Action
-        disabled={!orderData.date || !orderData.price || !orderData.quantity || !orderData.action}
+        disabled={!orderData.date || !orderData.price || !orderData.quantity || !orderData.side}
         onClick={() => {
           if (order) {
             handleUpdateOrder(orderData)
@@ -108,11 +108,11 @@ function OrderModal({
 }
 
 type Props = {
-  order?: { action: string; date: Date; price: string; quantity: string }
+  order?: { side: string; date: Date; price: string; quantity: string }
   isOrderModalOpen: boolean
   setIsOrderModalOpen: (e: boolean) => void
-  handleCreateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
-  handleUpdateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
+  handleCreateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
+  handleUpdateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
 }
 
 OrderModal.propTypes = {
