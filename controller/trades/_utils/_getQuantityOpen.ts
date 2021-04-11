@@ -1,13 +1,13 @@
-function getQuantity(
-  orders: [{ id: string; action: string; date: Date; price: string; quantity: string }],
+function getQuantityOpen(
+  orders: [{ id: string; side: string; date: Date; price: string; quantity: string }],
   side: string
 ): number {
   const quantityBuy = orders
-    .filter(order => order.action === 'buy')
+    .filter(order => order.side === 'buy')
     .reduce((total, value) => total + Number(value.quantity), 0)
 
   const quantitySell = orders
-    .filter(order => order.action === 'sell')
+    .filter(order => order.side === 'sell')
     .reduce((total, value) => total + Number(value.quantity), 0)
 
   if (side === 'buy') {
@@ -19,4 +19,4 @@ function getQuantity(
   }
 }
 
-export default getQuantity
+export default getQuantityOpen

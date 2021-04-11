@@ -29,8 +29,8 @@ export default NextAuth({
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    ssl: true,
-    extra: { ssl: { rejectUnauthorized: false } }
+    ssl: process.env.NODE_ENV === 'production' ? true : false,
+    extra: process.env.NODE_ENV === 'production' ? { ssl: { rejectUnauthorized: false } } : {}
   },
   callbacks: {
     jwt: async (token, user) => {
