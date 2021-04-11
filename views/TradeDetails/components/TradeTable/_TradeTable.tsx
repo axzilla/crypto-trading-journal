@@ -9,58 +9,42 @@ import nbs from '@utils/nbs'
 import formatCurrency from '@utils/formatCurrency'
 import formatQuantity from '@utils/formatQuantity'
 
-// Local Utils
-import {
-  getCost,
-  getQuantity,
-  getSide,
-  getAvgPrice,
-  getSize,
-  getReturnPercent,
-  getReturnTotal,
-  getStatus
-} from './_utils'
-
-function TradeTable({ trade, orders }: TradeTableProps): JSX.Element {
+function TradeTable({ trade }: TradeTableProps): JSX.Element {
   return (
     <Table
       data={[trade].map(() => {
-        const side = getSide(orders)
-        const size = getSize(orders, side)
-        const quantity = getQuantity(orders, side)
-        const cost = getCost(orders)
-        const avgEntry = getAvgPrice(orders, side === 'buy' ? 'buy' : 'sell')
-        const avgExit = getAvgPrice(orders, side === 'sell' ? 'buy' : 'sell')
-        const returnTotal = getReturnTotal(avgEntry, avgExit, size)
-        const returnPercent = getReturnPercent(cost, returnTotal)
-        const status = getStatus(quantity, avgEntry, avgExit)
-
         return {
-          side: <Tag type="warning">{side.toUpperCase()}</Tag>,
-          size: size,
-          quantity: formatQuantity(quantity),
-          cost: formatCurrency(cost),
-          avgEntryPrice: formatCurrency(avgEntry),
-          avgExitPrice: formatCurrency(avgExit),
+          side: <Tag type="warning">{trade.side.toUpperCase()}</Tag>,
+          quantityTotal: formatQuantity(Number(trade.quantity_total)),
+          quantityOpen: formatQuantity(Number(trade.quantity_open)),
+          cost: formatCurrency(Number(trade.cost)),
+          avgEntryPrice: formatCurrency(Number(trade.avg_entry)),
+          avgExitPrice: formatCurrency(Number(trade.avg_exit)),
           returnTotal: (
-            <Text type={avgEntry < avgExit ? 'warning' : 'error'}>
-              {formatCurrency(returnTotal)}
+            <Text
+              type={trade.status === 'WINNER' || trade.return_total >= '0' ? 'warning' : 'error'}
+            >
+              {formatCurrency(Number(trade.return_total))}
             </Text>
           ),
           returnPercent: (
-            <Text type={avgEntry < avgExit ? 'warning' : 'error'}>{returnPercent.toFixed(2)}</Text>
+            <Text
+              type={trade.status === 'WINNER' || trade.return_percent >= '0' ? 'warning' : 'error'}
+            >
+              {trade.return_percent} %
+            </Text>
           ),
           status: (
             <Tag invert type="warning">
-              {status}
+              {trade.status}
             </Tag>
           )
         }
       })}
     >
       <Table.Column prop="side" label="Side" />
-      <Table.Column prop="size" label={'Size'} />
-      <Table.Column prop="quantity" label={'Open'} />
+      <Table.Column prop="quantityTotal" label={'Qty Total'} />
+      <Table.Column prop="quantityOpen" label={'Qty Open'} />
       <Table.Column prop="cost" label="Cost" />
       <Table.Column prop="avgEntryPrice" label={nbs('Avg Entry')} />
       <Table.Column prop="avgExitPrice" label={nbs('Avg Exit')} />
@@ -75,23 +59,21 @@ type TradeTableProps = {
   trade: {
     id: string
     exchange: string
-    symbol: Date
+    symbol: string
+    side: string
     status: string
+    quantity_total: string
+    quantity_open: string
+    cost: string
+    avg_entry: string
+    avg_exit: string
+    return_total: string
+    return_percent: string
   }
-  orders: [
-    {
-      id: string
-      action: string
-      date: Date
-      price: string
-      quantity: string
-    }
-  ]
 }
 
 TradeTable.propTypes = {
-  trade: PropTypes.object.isRequired,
-  orders: PropTypes.array.isRequired
+  trade: PropTypes.object.isRequired
 }
 
 export default TradeTable

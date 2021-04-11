@@ -2,7 +2,7 @@ function getSide(
   orders: [
     {
       id: string
-      action: string
+      side: string
       date: Date
       price: string
       quantity: string
@@ -10,6 +10,6 @@ function getSide(
   ]
 ): string {
   // Tradeside is based on the trade orders "first-date"
-  return orders.sort((a, b): number => Number(a.date) - Number(b.date))[0].action
+  return orders.sort((a, b): number => Number(a.date) - Number(b.date))[0].side
 }
 export default getSide

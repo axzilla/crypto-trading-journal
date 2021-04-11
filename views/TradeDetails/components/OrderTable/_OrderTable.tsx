@@ -24,10 +24,10 @@ function OrderTable({
       data={orders
         .sort((a, b) => Number(a.date) - Number(b.date))
         .map(order => {
-          const { action, price, quantity, date, id } = order
+          const { side, price, quantity, date, id } = order
 
           return {
-            action: <Tag type="warning">{action.toUpperCase()}</Tag>,
+            side: <Tag type="warning">{side.toUpperCase()}</Tag>,
             quantity: formatQuantity(Number(quantity)),
             price: `${formatCurrency(Number(price))}`,
             value: `${formatCurrency(Number(price) * Number(quantity))}`,
@@ -47,7 +47,7 @@ function OrderTable({
           }
         })}
     >
-      <Table.Column prop="action" label="Side" />
+      <Table.Column prop="side" label="Side" />
       <Table.Column prop="quantity" label="Quantity" />
       <Table.Column prop="price" label="Price" />
       <Table.Column prop="value" label="Value" />
@@ -61,13 +61,13 @@ type OrderTableProps = {
   orders: [
     {
       id: string
-      action: string
+      side: string
       date: Date
       price: string
       quantity: string
     }
   ]
-  handleUpdateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
+  handleUpdateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
   handleDeleteOrder?: (e: string) => void
 }
 

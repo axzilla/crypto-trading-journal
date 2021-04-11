@@ -1,8 +1,8 @@
-function getSize(
+function getQuantityTotal(
   orders: [
     {
       id: string
-      action: string
+      side: string
       date: Date
       price: string
       quantity: string
@@ -11,10 +11,10 @@ function getSize(
   side: string
 ): number {
   return orders
-    .filter(order => order.action === side)
+    .filter(order => order.side === side)
     .reduce((total, value) => {
       return total + Number(value.quantity)
     }, 0)
 }
 
-export default getSize
+export default getQuantityTotal
