@@ -36,12 +36,12 @@ function EditOrder({ order, handleUpdateOrder }: EditOrderProps): JSX.Element {
 
 type EditOrderProps = {
   order: {
-    action: string
+    side: string
     date: Date
     price: string
     quantity: string
   }
-  handleUpdateOrder?: (e: { action: string; date: Date; price: string; quantity: string }) => void
+  handleUpdateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
 }
 
 EditOrder.propTypes = {

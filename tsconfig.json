@@ -4,7 +4,9 @@
     "paths": {
       "@components/*": ["components/*"],
       "@components-ui/*": ["components-ui/*"],
-      "@utils/*": ["utils/*"]
+      "@graphql/*": ["graphql/*"],
+      "@utils/*": ["utils/*"],
+      "@controller/*": ["controller/*"]
     },
     "target": "es5",
     "lib": [

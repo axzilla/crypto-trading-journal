@@ -51,15 +51,15 @@ function TradeModal({
           />
           <Select
             onChange={value => {
-              setTradeData({ ...tradeData, action: value })
+              setTradeData({ ...tradeData, side: value })
             }}
             options={[
               { label: 'Buy / Long', value: 'buy' },
               { label: 'Sell / Short', value: 'sell' }
             ]}
             placeholder="Choose one"
-            label="Action"
-            value={tradeData.action}
+            label="Side"
+            value={tradeData.side}
             fullWidth
           />
           <DateTimePicker
@@ -104,7 +104,7 @@ function TradeModal({
           !tradeData.date ||
           !tradeData.price ||
           !tradeData.quantity ||
-          !tradeData.action
+          !tradeData.side
         }
         onClick={handleCreateTrade}
       >
@@ -121,7 +121,7 @@ type Props = {
     date: Date
     price: string
     quantity: string
-    action: string
+    side: string
   }
   setTradeData: (e: {
     exchange: string
@@ -129,7 +129,7 @@ type Props = {
     date: Date
     price: string
     quantity: string
-    action: string
+    side: string
   }) => void
   handleCreateTrade: () => void
   setExchangesRelated: (e: { label: string; value: string }[]) => void
