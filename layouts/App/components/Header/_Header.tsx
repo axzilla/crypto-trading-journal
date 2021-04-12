@@ -56,8 +56,6 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         <Grid className={classes.headerContent} justify="space-between">
           <Grid.Container alignItems="center">
             <TrendingUpIcon />
-            <Spacer x={0.5} />
-            <Text className={classes.headerTitle}>Crypto Trading Journal</Text>
           </Grid.Container>
 
           <Popover
