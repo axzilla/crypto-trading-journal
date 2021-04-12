@@ -6,7 +6,9 @@
       "@components-ui/*": ["components-ui/*"],
       "@graphql/*": ["graphql/*"],
       "@utils/*": ["utils/*"],
-      "@controller/*": ["controller/*"]
+      "@controller/*": ["controller/*"],
+      "@layouts/*": ["layouts/*"],
+      "@views/*": ["views/*"]
     },
     "target": "es5",
     "lib": [
