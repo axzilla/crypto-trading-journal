@@ -3,6 +3,8 @@ const tradeAndOrdersByTradeId = /* GraphQL */ `
     tradeByTradeId(id: $trade_id) {
       id
       user_id
+      type
+      leverage
       symbol
       exchange
       side

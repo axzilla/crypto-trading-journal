@@ -2,6 +2,8 @@ const orderType = /* GraphQL */ `
   type Trade {
     id: String!
     user_id: String!
+    type: String!
+    leverage: Float!
     exchange: String!
     symbol: String!
     side: String!

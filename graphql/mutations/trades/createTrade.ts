@@ -1,6 +1,8 @@
 const createTrade = /* GraphQL */ `
   mutation createTrade(
     # Trade
+    $type: String!
+    $leverage: Float!
     $symbol: String!
     $exchange: String!
     $quantity_total: String!
@@ -17,6 +19,8 @@ const createTrade = /* GraphQL */ `
   ) {
     createTrade(
       # Trade
+      type: $type
+      leverage: $leverage
       symbol: $symbol
       exchange: $exchange
       quantity_total: $quantity_total
