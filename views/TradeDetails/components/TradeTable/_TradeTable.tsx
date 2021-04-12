@@ -14,6 +14,14 @@ function TradeTable({ trade }: TradeTableProps): JSX.Element {
     <Table
       data={[trade].map(() => {
         return {
+          type:
+            trade.type === 'Leverage' ? (
+              <>
+                {trade.type} ({trade.leverage}x)
+              </>
+            ) : (
+              trade.type
+            ),
           side: <Tag type="warning">{trade.side.toUpperCase()}</Tag>,
           quantityTotal: formatQuantity(Number(trade.quantity_total)),
           quantityOpen: formatQuantity(Number(trade.quantity_open)),
@@ -42,9 +50,10 @@ function TradeTable({ trade }: TradeTableProps): JSX.Element {
         }
       })}
     >
+      <Table.Column prop="type" label="Type" />
       <Table.Column prop="side" label="Side" />
-      <Table.Column prop="quantityTotal" label={'Qty Total'} />
-      <Table.Column prop="quantityOpen" label={'Qty Open'} />
+      <Table.Column prop="quantityTotal" label={nbs('Qty Total')} />
+      <Table.Column prop="quantityOpen" label={nbs('Qty Open')} />
       <Table.Column prop="cost" label="Cost" />
       <Table.Column prop="avgEntryPrice" label={nbs('Avg Entry')} />
       <Table.Column prop="avgExitPrice" label={nbs('Avg Exit')} />
@@ -58,6 +67,8 @@ function TradeTable({ trade }: TradeTableProps): JSX.Element {
 type TradeTableProps = {
   trade: {
     id: string
+    type: string
+    leverage: number
     exchange: string
     symbol: string
     side: string

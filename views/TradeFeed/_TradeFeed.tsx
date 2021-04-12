@@ -75,8 +75,10 @@ function TradeFeed(): JSX.Element {
     // Trade
     exchange: '',
     symbol: '',
+    type: '',
+    leverage: 0,
     // Inital order
-    date: null,
+    date: new Date(),
     price: '',
     quantity: '',
     side: ''
@@ -115,8 +117,10 @@ function TradeFeed(): JSX.Element {
       // Trade
       exchange: '',
       symbol: '',
+      type: '',
+      leverage: 0,
       // Inital order
-      date: null,
+      date: new Date(),
       price: '',
       quantity: '',
       side: ''
@@ -177,6 +181,8 @@ function TradeFeed(): JSX.Element {
               .map(trade => {
                 const {
                   id,
+                  type,
+                  leverage,
                   exchange,
                   symbol,
                   status,
@@ -190,6 +196,8 @@ function TradeFeed(): JSX.Element {
                   return_total
                 }: {
                   id: string
+                  type: string
+                  leverage: number
                   status: string
                   symbol: string
                   exchange: string
@@ -205,6 +213,14 @@ function TradeFeed(): JSX.Element {
 
                 return {
                   id,
+                  type:
+                    type === 'Leverage' ? (
+                      <>
+                        {type} ({leverage}x)
+                      </>
+                    ) : (
+                      type
+                    ),
                   symbol: (
                     <Tag invert type="warning">
                       {symbol.toUpperCase()}
@@ -236,6 +252,7 @@ function TradeFeed(): JSX.Element {
               })
           }
         >
+          <Table.Column prop="type" label="Type" />
           <Table.Column prop="symbol" label="Symbol" />
           <Table.Column prop="exchange" label="Exchange" />
           <Table.Column prop="side" label="Side" />
