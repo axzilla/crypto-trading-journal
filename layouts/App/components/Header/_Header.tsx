@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { signOut, useSession } from 'next-auth/client'
-import NextLink from 'next/Link'
 
 // Utils
 import makeStyles from 'utils/makeStyles'
