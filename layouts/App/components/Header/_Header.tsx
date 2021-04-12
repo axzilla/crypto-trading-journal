@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { signOut, useSession } from 'next-auth/client'
+import NextLink from 'next/Link'
 
 // Utils
 import makeStyles from 'utils/makeStyles'
@@ -11,7 +12,8 @@ import { Button, GeistUIThemes, Link, Popover, Avatar, Spacer, Grid, Text } from
 import {
   Sun as SunIcon,
   Moon as MoonIcon,
-  TrendingUp as TrendingUpIcon
+  TrendingUp as TrendingUpIcon,
+  Github as GithubIcon
 } from '@geist-ui/react-icons'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
@@ -79,6 +81,10 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
             auto
             size="small"
           />
+          <Spacer />
+          <Link href="https://github.com/badazzdev/crypto-trading-journal" target="_blank">
+            <GithubIcon size={20} />
+          </Link>
         </Grid>
       </Grid.Container>
     </Grid>
