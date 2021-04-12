@@ -2,6 +2,8 @@ const tradeMutations = /* GraphQL */ `
   extend type Mutation {
     createTrade(
       # Trade
+      type: String!
+      leverage: Float!
       exchange: String!
       symbol: String!
       quantity_total: String!

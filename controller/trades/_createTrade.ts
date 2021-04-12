@@ -2,6 +2,8 @@
 import db from '../../knex'
 
 type Props = {
+  type: string
+  leverage: number
   symbol: string
   exchange: string
   quantity_total: string
@@ -18,6 +20,8 @@ type Props = {
 async function createTrade(
   data: Props
 ): Promise<{
+  type: string
+  leverage: number
   symbol: string
   exchange: string
   quantity_total: string
@@ -32,6 +36,8 @@ async function createTrade(
 }> {
   const {
     // Trade
+    type,
+    leverage,
     symbol,
     exchange,
     quantity_total,
@@ -47,7 +53,9 @@ async function createTrade(
     side
   } = data
 
-  const initialTradeData = {
+  const tradeData = {
+    type,
+    leverage,
     symbol,
     exchange,
     quantity_total,
@@ -57,12 +65,13 @@ async function createTrade(
     user_id,
     side
   }
-  const orderData = { date, price, quantity, user_id, side }
 
-  const createdTrade = await db('trades').insert(initialTradeData).returning('*')
+  const initialOrderData = { date, price, quantity, user_id, side }
+
+  const createdTrade = await db('trades').insert(tradeData).returning('*')
 
   await db('orders')
-    .insert({ ...orderData, trade_id: createdTrade[0].id })
+    .insert({ ...initialOrderData, trade_id: createdTrade[0].id })
     .returning('*')
 
   return createdTrade[0]
