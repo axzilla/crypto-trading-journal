@@ -1,4 +1,12 @@
 {
+  "name": "crypto-trading-journal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "homepage": "https://crypto-trading-journal.vercel.app",
+  "description": "Trading journal for the crypto space. Track and analyze your trades. The easy way.",
+  "repository": "https://github.com/badazzdev/crypto-trading-journal",
+  "author": "badazzdev <mail@badazz.dev>",
   "scripts": {
     "dev": "next",
     "build": "npm run migrate:latest && next build",
