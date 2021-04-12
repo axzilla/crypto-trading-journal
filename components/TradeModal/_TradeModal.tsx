@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types'
 
 // Geist UI
-import { Modal, Grid } from '@geist-ui/react'
+import { Modal, Grid, Slider, Spacer } from '@geist-ui/react'
 
 // Components UI
 import { Input, Autocomplete, Select, DateTimePicker } from '../../components-ui'
@@ -22,6 +22,38 @@ function TradeModal({
       <Modal.Title>Add Trade</Modal.Title>
       <Modal.Content>
         <Grid.Container justify="center">
+          <Select
+            onChange={value => {
+              if (value === 'Spot') {
+                setTradeData({ ...tradeData, type: value, leverage: 0 })
+              } else {
+                setTradeData({ ...tradeData, type: value })
+              }
+            }}
+            options={[
+              { label: 'Spot', value: 'Spot' },
+              { label: 'Leverage', value: 'Leverage' }
+            ]}
+            placeholder="Choose one"
+            label="Type"
+            value={tradeData.type}
+            fullWidth
+          />
+
+          {tradeData.type === 'Leverage' && (
+            <>
+              <Spacer />
+              <Slider
+                step={1}
+                max={125}
+                min={0}
+                initialValue={tradeData.leverage}
+                value={tradeData.leverage}
+                onChange={value => setTradeData({ ...tradeData, leverage: value })}
+              />
+            </>
+          )}
+
           <Autocomplete
             onSearch={value => {
               if (!value) return setExchangesRelated([])
@@ -99,6 +131,7 @@ function TradeModal({
       </Modal.Action>
       <Modal.Action
         disabled={
+          !tradeData.type ||
           !tradeData.exchange ||
           !tradeData.symbol ||
           !tradeData.date ||
@@ -116,6 +149,8 @@ function TradeModal({
 
 type Props = {
   tradeData: {
+    type: string
+    leverage: number
     exchange: string
     symbol: string
     date: Date
@@ -124,6 +159,8 @@ type Props = {
     side: string
   }
   setTradeData: (e: {
+    type: string
+    leverage: number
     exchange: string
     symbol: string
     date: Date
