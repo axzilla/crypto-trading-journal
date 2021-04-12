@@ -1,6 +1,6 @@
 function nbs(string: string): string {
   // Non breakable string
-  return string.replaceAll(' ', '\u00A0')
+  return string.replace(' ', '\u00A0')
 }
 
 export default nbs
