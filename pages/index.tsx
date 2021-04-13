@@ -1,16 +1,42 @@
+// Packages
+import React from 'react'
+import PropTypes from 'prop-types'
+import { getSession } from 'next-auth/client'
 import { GetServerSideProps } from 'next'
 
-function Home(): JSX.Element {
-  return null
+// Layouts
+import { App as AppLayout } from 'layouts'
+
+// Views
+import { Home as HomeView } from 'views'
+
+function Home({ toggleDarkMode, themeType }: Props): JSX.Element {
+  return (
+    <AppLayout toggleDarkMode={toggleDarkMode} themeType={themeType}>
+      <HomeView />
+    </AppLayout>
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  if (ctx.res) {
+  const session = await getSession(ctx)
+
+  if (session && ctx.res) {
     ctx.res.writeHead(302, { Location: '/trades' })
     ctx.res.end()
   }
 
-  return { props: { undefined } }
+  return { props: { session } }
+}
+
+type Props = {
+  toggleDarkMode: () => void
+  themeType: string
+}
+
+Home.propTypes = {
+  toggleDarkMode: PropTypes.func.isRequired,
+  themeType: PropTypes.string.isRequired
 }
 
 export default Home

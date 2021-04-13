@@ -24,9 +24,6 @@ Trading journal for the crypto space. Track and analyze your trades. The easy wa
 - PostgreSQL
 - GraphQL
 
-## To do
+## To do to finish MVP
 
-- Implement fee calculation
-- Implement leverage with advanced calculation
-- Create a landing page with sign up/sign in
-- Implement a feedback form
+[https://github.com/badazzdev/crypto-trading-journal/projects/1](https://github.com/badazzdev/crypto-trading-journal/projects/1)

@@ -6,11 +6,11 @@ import { Header, Footer } from './components'
 
 function App({ children, toggleDarkMode, themeType }: Props): JSX.Element {
   return (
-    <>
+    <div style={{ minHeight: '100vh' }}>
       <Header toggleDarkMode={toggleDarkMode} themeType={themeType} />
       {children}
       <Footer />
-    </>
+    </div>
   )
 }
 

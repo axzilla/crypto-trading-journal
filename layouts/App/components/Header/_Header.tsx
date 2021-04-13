@@ -7,7 +7,7 @@ import { signOut, useSession } from 'next-auth/client'
 import makeStyles from 'utils/makeStyles'
 
 // Geist UI
-import { Button, GeistUIThemes, Link, Popover, Avatar, Spacer, Grid, Text } from '@geist-ui/react'
+import { Button, GeistUIThemes, Link, Popover, Avatar, Spacer, Grid } from '@geist-ui/react'
 import {
   Sun as SunIcon,
   Moon as MoonIcon,
@@ -56,24 +56,26 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         <Grid className={classes.headerContent} justify="space-between">
           <Grid.Container alignItems="center">
             <TrendingUpIcon />
-            <Spacer x={0.5} />
-            <Text className={classes.headerTitle}>Crypto Trading Journal</Text>
           </Grid.Container>
 
-          <Popover
-            content={
-              <>
-                <Popover.Item title>{session.user.email}</Popover.Item>
-                <Popover.Item onClick={signOut}>
-                  <Link>Logout</Link>
-                </Popover.Item>
-              </>
-            }
-            placement="bottomEnd"
-          >
-            <Avatar text={session.user.email.slice(0, 1).toUpperCase()} />
-          </Popover>
-          <Spacer />
+          {session && (
+            <>
+              <Popover
+                content={
+                  <>
+                    <Popover.Item title>{session.user.email}</Popover.Item>
+                    <Popover.Item onClick={signOut}>
+                      <Link>Logout</Link>
+                    </Popover.Item>
+                  </>
+                }
+                placement="bottomEnd"
+              >
+                <Avatar text={session.user.email.slice(0, 1).toUpperCase()} />
+              </Popover>
+              <Spacer />
+            </>
+          )}
           <Button
             onClick={toggleDarkMode}
             iconRight={themeType === 'dark' ? <MoonIcon /> : <SunIcon />}
