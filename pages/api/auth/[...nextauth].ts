@@ -12,12 +12,8 @@ export default NextAuth({
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD
-        },
-        tls: {
-          rejectUnauthorized: false
         }
-      },
-      from: process.env.EMAIL_FROM
+      }
     })
   ],
   secret: process.env.SECRET,
