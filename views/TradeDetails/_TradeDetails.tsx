@@ -31,6 +31,7 @@ import { OrderTable, TradeTable } from './components'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   content: {
+    minHeight: 'calc(100vh - 135px)',
     maxWidth: ui.layout.pageWidthWithMargin,
     padding: `calc(${ui.layout.gap} * 2) ${ui.layout.pageMargin} calc(${ui.layout.gap} * 2)`,
     boxSizing: 'border-box',
