@@ -5,10 +5,10 @@ import { getSession } from 'next-auth/client'
 import { GetServerSideProps } from 'next'
 
 // Layouts
-import { App as AppLayout } from './../../layouts'
+import { App as AppLayout } from 'layouts'
 
 // Views
-import { TradeFeed as TradeFeedView } from './../../views'
+import { TradeFeed as TradeFeedView } from 'views'
 
 function Dashboard({ toggleDarkMode, themeType }: Props): JSX.Element {
   return (
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   const session = await getSession(ctx)
 
   if (!session && ctx.res) {
-    ctx.res.writeHead(302, { Location: '/api/auth/signin' })
+    ctx.res.writeHead(302, { Location: '/' })
     ctx.res.end()
   }
 

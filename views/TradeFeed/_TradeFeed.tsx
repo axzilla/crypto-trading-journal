@@ -26,6 +26,7 @@ import deleteTrade from 'graphql/mutations/trades/deleteTrade'
 import tradesByUserId from 'graphql/queries/tradesByUserId'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
+  root: { minHeight: 'calc(100vh - 135px)' },
   content: {
     display: 'flex',
     flexDirection: 'row',
@@ -161,7 +162,7 @@ function TradeFeed(): JSX.Element {
   }
 
   return (
-    <>
+    <div className={classes.root}>
       <div className={classes.content}>
         <div className={classes.name}>
           <div className={classes.title}>
@@ -283,7 +284,7 @@ function TradeFeed(): JSX.Element {
           handleDeleteTrade={handleDeleteTrade}
         />
       )}
-    </>
+    </div>
   )
 }
 
