@@ -114,7 +114,13 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         </Grid.Container>
       </Grid>
 
-      <Modal open={isFeedbackModalOpen} onClose={() => setIsFeedbackModalOpen(false)}>
+      <Modal
+        open={isFeedbackModalOpen}
+        onClose={() => {
+          setIsFeedbackModalOpen(false)
+          setFeedback('')
+        }}
+      >
         <Modal.Subtitle>Feedback</Modal.Subtitle>
         <Modal.Content>
           <Textarea
@@ -124,7 +130,13 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
             onChange={e => setFeedback(e.target.value)}
           />
         </Modal.Content>
-        <Modal.Action passive onClick={() => setIsFeedbackModalOpen(false)}>
+        <Modal.Action
+          passive
+          onClick={() => {
+            setIsFeedbackModalOpen(false)
+            setFeedback('')
+          }}
+        >
           Cancel
         </Modal.Action>
         <Modal.Action disabled={!feedback} onClick={handleSendFeedback}>
