@@ -52,16 +52,20 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
   const classes = useStyles()
   const [session] = useSession()
   const [, setToast] = useToasts()
+  const [isLoading, setIsLoading] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
   const [feedback, setFeedback] = useState('')
 
   async function handleSendFeedback() {
     try {
+      setIsLoading(true)
       await axios.post('/api/feedback', { feedback })
       setIsFeedbackModalOpen(false)
       setFeedback('')
       setToast({ text: 'Thanks for your feedback!', type: 'success', delay: 5000 })
+      setIsLoading(false)
     } catch (error) {
+      setIsLoading(false)
       setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
     }
   }
@@ -115,6 +119,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
       </Grid>
 
       <Modal
+        disableBackdropClick={isLoading}
         open={isFeedbackModalOpen}
         onClose={() => {
           setIsFeedbackModalOpen(false)
@@ -132,6 +137,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         </Modal.Content>
         <Modal.Action
           passive
+          loading={isLoading}
           onClick={() => {
             setIsFeedbackModalOpen(false)
             setFeedback('')
@@ -139,7 +145,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         >
           Cancel
         </Modal.Action>
-        <Modal.Action disabled={!feedback} onClick={handleSendFeedback}>
+        <Modal.Action loading={isLoading} disabled={!feedback} onClick={handleSendFeedback}>
           Send
         </Modal.Action>
       </Modal>
