@@ -90,14 +90,14 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
                 >
                   <Avatar text={session.user.email.slice(0, 1).toUpperCase()} />
                 </Popover>
-                <Spacer />
+                <Spacer x={0.5} />
                 <Button
                   iconRight={<MailIcon />}
                   onClick={() => setIsFeedbackModalOpen(true)}
                   auto
                   size="small"
                 />
-                <Spacer />
+                <Spacer x={0.5} />
               </>
             )}
             <Button
@@ -106,7 +106,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
               auto
               size="small"
             />
-            <Spacer />
+            <Spacer x={0.5} />
             <Link href="https://github.com/badazzdev/crypto-trading-journal" target="_blank">
               <GithubIcon size={20} />
             </Link>
