@@ -9,7 +9,7 @@
   "author": "badazzdev <mail@badazz.dev>",
   "scripts": {
     "dev": "next",
-    "build": "npm run migrate:latest && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\""
   },
