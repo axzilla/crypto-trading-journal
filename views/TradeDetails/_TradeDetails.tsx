@@ -6,17 +6,8 @@ import useSWR from 'swr'
 import axios from 'axios'
 
 // Geist UI
-import {
-  GeistUIThemes,
-  Text,
-  Button,
-  Spacer,
-  Grid,
-  Link,
-  useToasts,
-  Spinner
-} from '@geist-ui/react'
-import { ArrowLeft as ArrowLeftIcon, Trash as TrashIcon } from '@geist-ui/react-icons'
+import { GeistUIThemes, Spacer, Grid, Link, useToasts, Spinner } from '@geist-ui/react'
+import { ArrowLeft as ArrowLeftIcon } from '@geist-ui/react-icons'
 
 // Global Utils
 import makeStyles from 'utils/makeStyles'
@@ -214,42 +205,14 @@ function TradeDetails(): JSX.Element {
         </Link>
       </NextLink>
       <Spacer />
-      <div>
-        <Grid.Container alignItems="center" justify="space-between">
-          <Text style={{ margin: 0 }} h3>
-            {data.symbol} / {data.exchange}{' '}
-          </Text>
-          <Button
-            onClick={() => setIsDeleteTradeModalOpen(tradeId.toString())}
-            size="small"
-            iconRight={<TrashIcon />}
-            auto
-          />
-        </Grid.Container>
-        <Spacer y={0.5} />
-        <div style={{ overflow: 'scroll' }}>
-          <Grid.Container>
-            <TradeTable trade={data} />
-          </Grid.Container>
-        </div>
-        <Spacer y={1} />
-        <Grid.Container justify="space-between" alignItems="flex-end">
-          <Text style={{ margin: 0 }} h5>
-            History
-          </Text>
-          <Button onClick={() => setIsOrderModalOpen(true)} size="small" auto>
-            Add Order
-          </Button>
-        </Grid.Container>
-        <Spacer y={0.5} />
-        <div style={{ overflow: 'scroll' }}>
-          <OrderTable
-            orders={data.orders}
-            handleUpdateOrder={handleUpdateOrder}
-            handleDeleteOrder={handleDeleteOrder}
-          />
-        </div>
-      </div>
+      <TradeTable trade={data} setIsDeleteTradeModalOpen={setIsDeleteTradeModalOpen} />
+      <Spacer y={1} />
+      <OrderTable
+        orders={data.orders}
+        handleUpdateOrder={handleUpdateOrder}
+        handleDeleteOrder={handleDeleteOrder}
+        setIsOrderModalOpen={setIsOrderModalOpen}
+      />
       {isOrderModalOpen && (
         <OrderModal
           isOrderModalOpen={isOrderModalOpen}
