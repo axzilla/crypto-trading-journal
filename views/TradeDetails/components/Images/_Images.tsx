@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 // Geist UI
 // import { Text, Card, useToasts, Spacer, Grid, Button } from '@geist-ui/react'
-import { Text, Card, Spacer, Grid, Button, Image } from '@geist-ui/react'
+import { Text, Card, Spacer, Grid, Button } from '@geist-ui/react'
 import { Trash as TrashIcon } from '@geist-ui/react-icons'
 
 function Images({ trade }: SetupsProps): JSX.Element {
@@ -55,8 +55,7 @@ function Images({ trade }: SetupsProps): JSX.Element {
               <Grid key={Math.random()} xs={12} md={6}>
                 <Card
                   style={{
-                    background:
-                      'url(https://www.hotelmedici.com/images/slide_home/11_Fori_imperiali_1600X917.jpg)',
+                    background: `url(${image})`,
                     backgroundSize: 'cover',
                     width: '100%',
                     height: 200,
