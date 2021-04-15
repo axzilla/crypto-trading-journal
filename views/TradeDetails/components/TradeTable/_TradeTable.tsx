@@ -23,23 +23,21 @@ function TradeTable({ trade }: TradeTableProps): JSX.Element {
               trade.type
             ),
           side: <Tag type="warning">{trade.side.toUpperCase()}</Tag>,
-          quantityTotal: formatQuantity(Number(trade.quantity_total)),
-          quantityOpen: formatQuantity(Number(trade.quantity_open)),
-          cost: formatCurrency(Number(trade.cost)),
-          avgEntryPrice: formatCurrency(Number(trade.avg_entry)),
-          avgExitPrice: formatCurrency(Number(trade.avg_exit)),
+          quantityTotal: formatQuantity(trade.quantityTotal),
+          quantityOpen: formatQuantity(trade.quantityOpen),
+          cost: formatCurrency(trade.cost),
+          avgEntryPrice: formatCurrency(trade.avgEntry),
+          avgExitPrice: formatCurrency(trade.avgExit),
           returnTotal: (
-            <Text
-              type={trade.status === 'WINNER' || trade.return_total >= '0' ? 'warning' : 'error'}
-            >
-              {formatCurrency(Number(trade.return_total))}
+            <Text type={trade.status === 'WINNER' || trade.returnTotal >= 0 ? 'warning' : 'error'}>
+              {formatCurrency(trade.returnTotal)}
             </Text>
           ),
           returnPercent: (
             <Text
-              type={trade.status === 'WINNER' || trade.return_percent >= '0' ? 'warning' : 'error'}
+              type={trade.status === 'WINNER' || trade.returnPercent >= 0 ? 'warning' : 'error'}
             >
-              {trade.return_percent} %
+              {trade.returnPercent} %
             </Text>
           ),
           status: (
@@ -66,20 +64,20 @@ function TradeTable({ trade }: TradeTableProps): JSX.Element {
 
 type TradeTableProps = {
   trade: {
-    id: string
+    _id: string
     type: string
-    leverage: number
     exchange: string
     symbol: string
     side: string
     status: string
-    quantity_total: string
-    quantity_open: string
-    cost: string
-    avg_entry: string
-    avg_exit: string
-    return_total: string
-    return_percent: string
+    leverage: number
+    quantityTotal: number
+    quantityOpen: number
+    cost: number
+    avgEntry: number
+    avgExit: number
+    returnTotal: number
+    returnPercent: number
   }
 }
 

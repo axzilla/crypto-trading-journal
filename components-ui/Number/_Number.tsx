@@ -2,6 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { GeistUIThemes, Input as GeistInput, Text } from '@geist-ui/react'
+import NumberFormat from 'react-number-format'
 
 // Utils
 import makeStyles from 'utils/makeStyles'
@@ -10,21 +11,18 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf }
 }))
 
-export default function Input({
-  onChange,
-  value,
-  placeholder,
-  label,
-  fullWidth,
-  ...rest
-}: Props): JSX.Element {
+function Number({ onChange, value, placeholder, label, fullWidth, ...rest }: Props): JSX.Element {
   const classes = useStyles()
 
   return (
     <div style={{ width: fullWidth && '100%' }}>
       {label && <Text className={classes.label}>{label}</Text>}
 
-      <GeistInput
+      <NumberFormat
+        customInput={GeistInput}
+        color="primary"
+        margin="dense"
+        variant="outlined"
         onChange={onChange}
         value={value}
         placeholder={placeholder}
@@ -37,17 +35,17 @@ export default function Input({
 
 type Props = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  value?: string
-  type?: string
+  value?: number
   placeholder?: string
   label?: string
   fullWidth?: boolean
 }
 
-Input.propTypes = {
+Number.propTypes = {
   onChange: PropTypes.func,
-  type: PropTypes.string,
   placeholder: PropTypes.string,
   label: PropTypes.string,
   fullWidth: PropTypes.bool
 }
+
+export default Number
