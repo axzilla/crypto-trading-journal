@@ -22,20 +22,25 @@ function OrderTable({
   return (
     <Table
       data={orders
-        .sort((a, b) => Number(a.date) - Number(b.date))
+        .sort((a, b): number => {
+          if (new Date(a.date) > new Date(b.date)) return -1
+          else if (new Date(a.date) < new Date(b.date)) return 1
+          else return 0
+        })
         .map(order => {
-          const { side, price, quantity, date, id } = order
+          const { side, price, quantity, date, _id } = order
 
           return {
             side: <Tag type="warning">{side.toUpperCase()}</Tag>,
-            quantity: formatQuantity(Number(quantity)),
-            price: `${formatCurrency(Number(price))}`,
-            value: `${formatCurrency(Number(price) * Number(quantity))}`,
-            date: nbs(moment.unix(Number(date) / 1000).format('MMMM D, YYYY, h:mm')),
+            quantity: formatQuantity(quantity),
+            price: `${formatCurrency(price)}`,
+            value: `${formatCurrency(price * quantity)}`,
+            date: nbs(moment(date).format('MMMM D, YYYY, h:mm')),
             actions: (
               <Grid.Container wrap="nowrap">
                 <Button
-                  onClick={() => handleDeleteOrder(id)}
+                  disabled={orders.length < 2}
+                  onClick={() => handleDeleteOrder(_id)}
                   iconRight={<TrashIcon />}
                   auto
                   size="small"
@@ -60,14 +65,14 @@ function OrderTable({
 type OrderTableProps = {
   orders: [
     {
-      id: string
+      _id: string
       side: string
       date: Date
-      price: string
-      quantity: string
+      price: number
+      quantity: number
     }
   ]
-  handleUpdateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
+  handleUpdateOrder?: (e: { side: string; date: Date; price: number; quantity: number }) => void
   handleDeleteOrder?: (e: string) => void
 }
 

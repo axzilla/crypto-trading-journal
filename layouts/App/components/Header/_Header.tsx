@@ -59,7 +59,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
   async function handleSendFeedback() {
     try {
       setIsLoading(true)
-      await axios.post('/api/feedback', { feedback })
+      await axios.post('/api/v1/feedback', { feedback })
       setIsFeedbackModalOpen(false)
       setFeedback('')
       setToast({ text: 'Thanks for your feedback!', type: 'success', delay: 5000 })

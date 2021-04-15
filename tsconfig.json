@@ -4,11 +4,11 @@
     "paths": {
       "@components/*": ["components/*"],
       "@components-ui/*": ["components-ui/*"],
-      "@graphql/*": ["graphql/*"],
       "@utils/*": ["utils/*"],
       "@controller/*": ["controller/*"],
       "@layouts/*": ["layouts/*"],
-      "@views/*": ["views/*"]
+      "@views/*": ["views/*"],
+      "@models/*": ["models/*"]
     },
     "target": "es5",
     "lib": [

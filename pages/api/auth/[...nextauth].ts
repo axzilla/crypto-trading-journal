@@ -18,16 +18,7 @@ export default NextAuth({
   ],
   secret: process.env.SECRET,
   session: { jwt: true },
-  database: {
-    type: 'postgres',
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
-    username: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    ssl: process.env.NODE_ENV === 'production' ? true : false,
-    extra: process.env.NODE_ENV === 'production' ? { ssl: { rejectUnauthorized: false } } : {}
-  },
+  database: process.env.MONGODB_URI,
   callbacks: {
     jwt: async (token, user) => {
       if (user) {
@@ -36,7 +27,7 @@ export default NextAuth({
       return Promise.resolve(token)
     },
     session: async (session, user) => {
-      session.user.id = user.id
+      session.user._id = user.id
       return Promise.resolve(session)
     }
   },

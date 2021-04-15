@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { Modal, Grid, Slider, Spacer } from '@geist-ui/react'
 
 // Components UI
-import { Input, Autocomplete, Select, DateTimePicker } from '../../components-ui'
+import { Input, Number, Autocomplete, Select, DateTimePicker } from '../../components-ui'
 
 function TradeModal({
   tradeData,
@@ -75,7 +75,6 @@ function TradeModal({
             onChange={e => {
               setTradeData({ ...tradeData, symbol: e.target.value.toUpperCase() })
             }}
-            name="symbol"
             placeholder="e.g. BTCUSD"
             label="Symbol"
             fullWidth
@@ -86,8 +85,8 @@ function TradeModal({
               setTradeData({ ...tradeData, side: value })
             }}
             options={[
-              { label: 'Buy / Long', value: 'buy' },
-              { label: 'Sell / Short', value: 'sell' }
+              { label: 'Long', value: 'Long' },
+              { label: 'Short', value: 'Short' }
             ]}
             placeholder="Choose one"
             label="Side"
@@ -102,24 +101,20 @@ function TradeModal({
             value={tradeData.date}
             fullWidth
           />
-          <Input
+          <Number
             onChange={e => {
-              setTradeData({ ...tradeData, price: e.target.value })
+              setTradeData({ ...tradeData, price: parseFloat(e.target.value) })
             }}
             value={tradeData.price}
-            type="number"
-            name="price"
             placeholder="Price"
             label="Price"
             fullWidth
           />
-          <Input
+          <Number
             value={tradeData.quantity}
             onChange={e => {
-              setTradeData({ ...tradeData, quantity: e.target.value })
+              setTradeData({ ...tradeData, quantity: parseFloat(e.target.value) })
             }}
-            name="quantity"
-            type="number"
             placeholder="Quantity"
             label="Quantity"
             fullWidth
@@ -154,8 +149,8 @@ type Props = {
     exchange: string
     symbol: string
     date: Date
-    price: string
-    quantity: string
+    price: number
+    quantity: number
     side: string
   }
   setTradeData: (e: {
@@ -164,8 +159,8 @@ type Props = {
     exchange: string
     symbol: string
     date: Date
-    price: string
-    quantity: string
+    price: number
+    quantity: number
     side: string
   }) => void
   handleCreateTrade: () => void
