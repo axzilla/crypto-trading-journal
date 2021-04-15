@@ -14,16 +14,6 @@ Trading journal for the crypto space. Track and analyze your trades. The easy wa
 4. Configure your local environment `cp .env.local.example .env.local`
 5. Run `npm run dev` to build and watch for code changes
 
-## Stack
-
-- React/Next.js
-- NextAuth
-- TypeScript
-- Geist UI
-- SWR
-- PostgreSQL
-- GraphQL
-
 ## To do to finish MVP
 
 [https://github.com/badazzdev/crypto-trading-journal/projects/1](https://github.com/badazzdev/crypto-trading-journal/projects/1)

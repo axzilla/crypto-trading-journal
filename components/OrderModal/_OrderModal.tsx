@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { Modal, Grid } from '@geist-ui/react'
 
 // Components UI
-import { Input, Select, DateTimePicker } from '../../components-ui'
+import { Select, DateTimePicker, Number } from '../../components-ui'
 
 function OrderModal({
   order,
@@ -18,12 +18,12 @@ function OrderModal({
   const [orderData, setOrderData] = useState({
     side: '',
     date: new Date(),
-    price: '',
-    quantity: ''
+    price: null,
+    quantity: null
   })
 
   useEffect(() => {
-    order && setOrderData({ ...order, date: new Date(Number(order.date)) })
+    order && setOrderData(order)
   }, [])
 
   return (
@@ -41,8 +41,8 @@ function OrderModal({
               setOrderData({ ...orderData, side: value })
             }}
             options={[
-              { label: 'Buy / Long', value: 'buy' },
-              { label: 'Sell / Short', value: 'sell' }
+              { label: 'Long', value: 'Long' },
+              { label: 'Short', value: 'Short' }
             ]}
             placeholder="Choose one"
             label="Side"
@@ -54,27 +54,23 @@ function OrderModal({
             onChange={value => {
               setOrderData({ ...orderData, date: new Date(value) })
             }}
-            value={orderData.date}
+            value={new Date(orderData.date)}
             fullWidth
           />
-          <Input
+          <Number
             onChange={e => {
-              setOrderData({ ...orderData, price: e.target.value })
+              setOrderData({ ...orderData, price: parseFloat(e.target.value) })
             }}
             value={orderData.price}
-            type="number"
-            name="price"
             placeholder="Price"
             label="Price"
             fullWidth
           />
-          <Input
+          <Number
             value={orderData.quantity}
             onChange={e => {
-              setOrderData({ ...orderData, quantity: e.target.value })
+              setOrderData({ ...orderData, quantity: parseFloat(e.target.value) })
             }}
-            name="quantity"
-            type="number"
             placeholder="Quantity"
             label="Quantity"
             fullWidth
@@ -108,11 +104,11 @@ function OrderModal({
 }
 
 type Props = {
-  order?: { side: string; date: Date; price: string; quantity: string }
+  order?: { side: string; date: Date; price: number; quantity: number }
   isOrderModalOpen: boolean
   setIsOrderModalOpen: (e: boolean) => void
-  handleCreateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
-  handleUpdateOrder?: (e: { side: string; date: Date; price: string; quantity: string }) => void
+  handleCreateOrder?: (e: { side: string; date: Date; price: number; quantity: number }) => void
+  handleUpdateOrder?: (e: { side: string; date: Date; price: number; quantity: number }) => void
 }
 
 OrderModal.propTypes = {

@@ -3,25 +3,36 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import useSWR from 'swr'
-import { request } from 'graphql-request'
-import { useSession } from 'next-auth/client'
+import axios from 'axios'
 
 // Geist UI
-import { GeistUIThemes, Text, Button, Spacer, Grid, Link, useToasts } from '@geist-ui/react'
+import {
+  GeistUIThemes,
+  Text,
+  Button,
+  Spacer,
+  Grid,
+  Link,
+  useToasts,
+  Spinner
+} from '@geist-ui/react'
 import { ArrowLeft as ArrowLeftIcon, Trash as TrashIcon } from '@geist-ui/react-icons'
 
-// Utils
+// Global Utils
 import makeStyles from 'utils/makeStyles'
 
-// GraphQL Mutations
-import createOrder from 'graphql/mutations/orders/createOrder'
-import deleteOrder from 'graphql/mutations/orders/deleteOrder'
-import updateOrder from 'graphql/mutations/orders/updateOrder'
-import updateTrade from 'graphql/mutations/trades/updateTrade'
-import deleteTrade from 'graphql/mutations/trades/deleteTrade'
-
-// GraphQL Queries
-import tradeAndOrdersByTradeId from 'graphql/queries/tradeAndOrdersByTradeId'
+// Local Utils
+import {
+  getCost,
+  getSide,
+  getAvgEntry,
+  getAvgExit,
+  getQuantityOpen,
+  getQuantityTotal,
+  getReturnPercent,
+  getReturnTotal,
+  getStatus
+} from './utils'
 
 // Global Components
 import { OrderModal, DeleteTradeModal } from 'components'
@@ -41,29 +52,54 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
 
 function TradeDetails(): JSX.Element {
   const classes = useStyles()
-  const [session] = useSession()
   const router = useRouter()
-  const { id: trade_id } = router.query
+  const { id: tradeId } = router.query
   const [, setToast] = useToasts()
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
   const [isDeleteTradeModalOpen, setIsDeleteTradeModalOpen] = useState<string | boolean>(false)
 
-  const { data, error, mutate } = useSWR([tradeAndOrdersByTradeId, trade_id], (query, trade_id) =>
-    request('/api/graphql', query, { trade_id })
-  )
+  const fetcher = url => axios.get(url).then(res => res.data)
+  const { data, error, mutate } = useSWR(`/api/v1/trade/get-trade-by-id/${tradeId}`, fetcher)
 
   if (error) console.log('failed to load') // eslint-disable-line
   if (!data) console.log('loading') // eslint-disable-line
 
-  async function handleCreateOrder(orderData) {
+  async function handleCreateOrder(order) {
     try {
-      await request('/api/graphql', createOrder, {
-        ...orderData,
-        user_id: session.user.id,
-        trade_id
-      })
+      const changedOrders: {
+        _id: string
+        side: string
+        date: Date
+        price: number
+        quantity: number
+      }[] = [...data.orders, order]
+
+      const side = getSide(changedOrders)
+      const quantityTotal = getQuantityTotal(changedOrders, side)
+      const quantityOpen = getQuantityOpen(changedOrders, side)
+      const cost = getCost(changedOrders)
+      const avgEntry = getAvgEntry(changedOrders, side)
+      const avgExit = getAvgExit(changedOrders, side)
+      const returnTotal = getReturnTotal(avgEntry, avgExit, side, changedOrders)
+      const returnPercent = getReturnPercent(cost, returnTotal)
+      const status = getStatus(quantityOpen, avgEntry, avgExit, side)
+
+      const changedTrade = {
+        ...data,
+        side,
+        quantityTotal,
+        quantityOpen,
+        cost,
+        avgEntry,
+        avgExit,
+        returnTotal,
+        returnPercent,
+        status,
+        orders: changedOrders
+      }
+
+      await axios.post('/api/v1/trade/update-trade', { changedTrade })
       mutate()
-      handleUpdateTrade()
       setToast({ text: 'You have successfully added a order!', type: 'success', delay: 5000 })
     } catch (error) {
       setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
@@ -71,11 +107,37 @@ function TradeDetails(): JSX.Element {
     }
   }
 
-  async function handleUpdateOrder({ id, side, date, price, quantity }) {
+  async function handleUpdateOrder(order) {
     try {
-      await request('/api/graphql', updateOrder, { id, side, date, price, quantity })
+      const index = data.orders.map(order => order._id).indexOf(order._id)
+      const changedOrders = [...data.orders.slice(0, index), order, ...data.orders.slice(index + 1)]
+
+      const side = getSide(changedOrders)
+      const quantityTotal = getQuantityTotal(changedOrders, side)
+      const quantityOpen = getQuantityOpen(changedOrders, side)
+      const cost = getCost(changedOrders)
+      const avgEntry = getAvgEntry(changedOrders, side)
+      const avgExit = getAvgExit(changedOrders, side)
+      const returnTotal = getReturnTotal(avgEntry, avgExit, side, changedOrders)
+      const returnPercent = getReturnPercent(cost, returnTotal)
+      const status = getStatus(quantityOpen, avgEntry, avgExit, side)
+
+      const changedTrade = {
+        ...data,
+        side,
+        quantityTotal,
+        quantityOpen,
+        cost,
+        avgEntry,
+        avgExit,
+        returnTotal,
+        returnPercent,
+        status,
+        orders: changedOrders
+      }
+
+      await axios.post('/api/v1/trade/update-trade', { changedTrade })
       mutate()
-      handleUpdateTrade()
       setToast({ text: 'You have successfully updated your order!', type: 'success', delay: 5000 })
     } catch (error) {
       setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
@@ -83,11 +145,37 @@ function TradeDetails(): JSX.Element {
     }
   }
 
-  async function handleDeleteOrder(id: string) {
+  async function handleDeleteOrder(_id: string) {
     try {
-      await request('/api/graphql', deleteOrder, { id })
+      const index = data.orders.map(order => order._id).indexOf(_id)
+      const changedOrders = [...data.orders.slice(0, index), ...data.orders.slice(index + 1)]
+
+      const side = getSide(changedOrders)
+      const quantityTotal = getQuantityTotal(changedOrders, side)
+      const quantityOpen = getQuantityOpen(changedOrders, side)
+      const cost = getCost(changedOrders)
+      const avgEntry = getAvgEntry(changedOrders, side)
+      const avgExit = getAvgExit(changedOrders, side)
+      const returnTotal = getReturnTotal(avgEntry, avgExit, side, changedOrders)
+      const returnPercent = getReturnPercent(cost, returnTotal)
+      const status = getStatus(quantityOpen, avgEntry, avgExit, side)
+
+      const changedTrade = {
+        ...data,
+        side,
+        quantityTotal,
+        quantityOpen,
+        cost,
+        avgEntry,
+        avgExit,
+        returnTotal,
+        returnPercent,
+        status,
+        orders: changedOrders
+      }
+
+      await axios.post('/api/v1/trade/update-trade', { changedTrade })
       mutate()
-      handleUpdateTrade()
       setToast({ text: 'You have successfully deleted your order!', type: 'success', delay: 5000 })
     } catch (error) {
       setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
@@ -95,19 +183,9 @@ function TradeDetails(): JSX.Element {
     }
   }
 
-  async function handleUpdateTrade() {
+  async function handleDeleteTrade(tradeId: string) {
     try {
-      await request('/api/graphql', updateTrade, { id: trade_id })
-      mutate()
-    } catch (error) {
-      setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
-      if (error) throw error
-    }
-  }
-
-  async function handleDeleteTrade(id: string) {
-    try {
-      await request('/api/graphql', deleteTrade, { id })
+      await axios.post('/api/v1/trade/delete-trade-by-id', { tradeId })
       setIsDeleteTradeModalOpen(false)
       router.push('/trades')
       setToast({ text: 'You have successfully deleted your trade!', type: 'success', delay: 5000 })
@@ -118,7 +196,13 @@ function TradeDetails(): JSX.Element {
   }
 
   return !data ? (
-    <Text>Loading</Text>
+    <Grid.Container
+      justify="center"
+      alignItems="center"
+      style={{ minHeight: 'calc(100vh - 135px)' }}
+    >
+      <Spinner size="large" />
+    </Grid.Container>
   ) : (
     <div className={classes.content}>
       <NextLink href="/trades">
@@ -133,25 +217,22 @@ function TradeDetails(): JSX.Element {
       <div>
         <Grid.Container alignItems="center" justify="space-between">
           <Text style={{ margin: 0 }} h3>
-            {data.tradeByTradeId[0].symbol} / {data.tradeByTradeId[0].exchange}{' '}
+            {data.symbol} / {data.exchange}{' '}
           </Text>
           <Button
-            onClick={() => setIsDeleteTradeModalOpen(trade_id.toString())}
+            onClick={() => setIsDeleteTradeModalOpen(tradeId.toString())}
             size="small"
             iconRight={<TrashIcon />}
             auto
           />
         </Grid.Container>
-
         <Spacer y={0.5} />
-
         <div style={{ overflow: 'scroll' }}>
           <Grid.Container>
-            <TradeTable trade={data.tradeByTradeId[0]} />
+            <TradeTable trade={data} />
           </Grid.Container>
         </div>
         <Spacer y={3} />
-
         <Grid.Container justify="space-between" alignItems="flex-end">
           <Text style={{ margin: 0 }} h5>
             History
@@ -160,18 +241,15 @@ function TradeDetails(): JSX.Element {
             Add Order
           </Button>
         </Grid.Container>
-
         <Spacer y={0.5} />
-
         <div style={{ overflow: 'scroll' }}>
           <OrderTable
-            orders={data.ordersByTradeId}
+            orders={data.orders}
             handleUpdateOrder={handleUpdateOrder}
             handleDeleteOrder={handleDeleteOrder}
           />
         </div>
       </div>
-
       {isOrderModalOpen && (
         <OrderModal
           isOrderModalOpen={isOrderModalOpen}
@@ -179,7 +257,6 @@ function TradeDetails(): JSX.Element {
           handleCreateOrder={handleCreateOrder}
         />
       )}
-
       {isDeleteTradeModalOpen && (
         <DeleteTradeModal
           isDeleteTradeModalOpen={isDeleteTradeModalOpen}
