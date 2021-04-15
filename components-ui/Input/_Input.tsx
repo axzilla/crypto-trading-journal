@@ -12,6 +12,7 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
 
 export default function Input({
   onChange,
+  onKeyDown,
   value,
   placeholder,
   label,
@@ -26,6 +27,7 @@ export default function Input({
 
       <GeistInput
         onChange={onChange}
+        onKeyDown={onKeyDown}
         value={value}
         placeholder={placeholder}
         width={fullWidth && '100%'}
@@ -37,6 +39,7 @@ export default function Input({
 
 type Props = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onKeyDown?: (e: React.KeyboardEvent<unknown>) => void
   value?: string
   type?: string
   placeholder?: string
@@ -46,6 +49,7 @@ type Props = {
 
 Input.propTypes = {
   onChange: PropTypes.func,
+  onKeyDown: PropTypes.func,
   type: PropTypes.string,
   placeholder: PropTypes.string,
   label: PropTypes.string,

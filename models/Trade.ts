@@ -29,6 +29,8 @@ const TradeSchema = new Schema({
     }
   ],
   //
+  setups: { type: Array },
+  mistakes: { type: Array },
   notes: { type: String },
   //
   dateCreated: { type: Date, required: true, default: Date.now() },

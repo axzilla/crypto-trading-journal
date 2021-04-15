@@ -38,7 +38,7 @@ import {
 import { OrderModal, DeleteTradeModal } from 'components'
 
 // Local Components
-import { OrderTable, TradeTable, Notes } from './components'
+import { OrderTable, TradeTable, Notes, Tags } from './components'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   content: {
@@ -264,6 +264,15 @@ function TradeDetails(): JSX.Element {
           handleDeleteTrade={handleDeleteTrade}
         />
       )}
+      <Spacer y={1} />
+      <Grid.Container gap={2}>
+        <Grid xs={24} md={12}>
+          <Tags type="setup" trade={data} />
+        </Grid>
+        <Grid xs={24} md={12}>
+          <Tags type="mistake" trade={data} />
+        </Grid>
+      </Grid.Container>
       <Spacer y={1} />
       <Notes trade={data} />
     </div>

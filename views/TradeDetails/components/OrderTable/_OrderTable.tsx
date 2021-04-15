@@ -33,8 +33,8 @@ function OrderTable({
           return {
             side: <Tag type="warning">{side.toUpperCase()}</Tag>,
             quantity: formatQuantity(quantity),
-            price: `${formatCurrency(price)}`,
-            value: `${formatCurrency(price * quantity)}`,
+            price: formatCurrency(price),
+            value: formatCurrency(price * quantity),
             date: nbs(moment(date).format('MMMM D, YYYY, h:mm')),
             actions: (
               <Grid.Container wrap="nowrap">
