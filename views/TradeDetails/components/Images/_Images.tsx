@@ -1,33 +1,35 @@
 // Packages
-import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import axios from 'axios'
+// import axios from 'axios'
 
 // Geist UI
-import { Text, Card, useToasts, Spacer, Grid, Button } from '@geist-ui/react'
+// import { Text, Card, useToasts, Spacer, Grid, Button } from '@geist-ui/react'
+import { Text, Card, Spacer, Grid, Button } from '@geist-ui/react'
 
 function Images({ trade }: SetupsProps): JSX.Element {
-  const [, setToast] = useToasts()
+  // const [, setToast] = useToasts()
 
-  async function handleAddImage() {
-    try {
-      // await axios.post('/api/v1/trade/update-trade', { changedTrade })
-      setToast({ text: 'Image saved successfully!', type: 'success', delay: 5000 })
-    } catch (error) {
-      setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
-      if (error) throw error
-    }
-  }
+  console.log(trade) // eslint-disable-line
 
-  async function handleDeleteImage() {
-    try {
-      // await axios.post('/api/v1/trade/update-trade', { changedTrade })
-      setToast({ text: 'Image saved successfully!', type: 'success', delay: 5000 })
-    } catch (error) {
-      setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
-      if (error) throw error
-    }
-  }
+  // async function handleAddImage() {
+  //   try {
+  //     // await axios.post('/api/v1/trade/update-trade', { changedTrade })
+  //     setToast({ text: 'Image saved successfully!', type: 'success', delay: 5000 })
+  //   } catch (error) {
+  //     setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
+  //     if (error) throw error
+  //   }
+  // }
+
+  // async function handleDeleteImage() {
+  //   try {
+  //     // await axios.post('/api/v1/trade/update-trade', { changedTrade })
+  //     setToast({ text: 'Image saved successfully!', type: 'success', delay: 5000 })
+  //   } catch (error) {
+  //     setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
+  //     if (error) throw error
+  //   }
+  // }
 
   return (
     <Card style={{ width: '100%' }}>
