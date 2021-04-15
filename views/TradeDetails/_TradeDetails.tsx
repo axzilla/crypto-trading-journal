@@ -213,27 +213,23 @@ function TradeDetails(): JSX.Element {
         handleDeleteOrder={handleDeleteOrder}
         setIsOrderModalOpen={setIsOrderModalOpen}
       />
-      {isOrderModalOpen && (
-        <OrderModal
-          isOrderModalOpen={isOrderModalOpen}
-          setIsOrderModalOpen={setIsOrderModalOpen}
-          handleCreateOrder={handleCreateOrder}
-        />
-      )}
-      {isDeleteTradeModalOpen && (
-        <DeleteTradeModal
-          isDeleteTradeModalOpen={isDeleteTradeModalOpen}
-          setIsDeleteTradeModalOpen={setIsDeleteTradeModalOpen}
-          handleDeleteTrade={handleDeleteTrade}
-        />
-      )}
+      <OrderModal
+        isOrderModalOpen={isOrderModalOpen}
+        setIsOrderModalOpen={setIsOrderModalOpen}
+        handleCreateOrder={handleCreateOrder}
+      />
+      <DeleteTradeModal
+        isDeleteTradeModalOpen={isDeleteTradeModalOpen}
+        setIsDeleteTradeModalOpen={setIsDeleteTradeModalOpen}
+        handleDeleteTrade={handleDeleteTrade}
+      />
       <Spacer y={1} />
       <Grid.Container gap={2}>
         <Grid xs={24} md={12}>
-          <Tags type="setup" trade={data} />
+          <Tags type="setup" trade={data} mutate={mutate} />
         </Grid>
         <Grid xs={24} md={12}>
-          <Tags type="mistake" trade={data} />
+          <Tags type="mistake" trade={data} mutate={mutate} />
         </Grid>
       </Grid.Container>
       <Spacer y={1} />

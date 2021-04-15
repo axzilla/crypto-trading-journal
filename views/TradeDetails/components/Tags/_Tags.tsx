@@ -1,5 +1,5 @@
 // Packages
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 
@@ -10,7 +10,7 @@ import { Text, Card, useToasts, Spacer, Tag, Modal } from '@geist-ui/react'
 import { Input } from 'components-ui'
 
 function TagItem({ type, tag, handleDeleteTag }: TagItemProps) {
-  const [isDeleteTagModal, setIsDeleteTagModal] = useState(false)
+  const [isDeleteTagModal, setIsDeleteTagModal] = useState(null)
 
   return (
     <>
@@ -23,6 +23,7 @@ function TagItem({ type, tag, handleDeleteTag }: TagItemProps) {
       >
         {tag}
       </Tag>
+
       <Modal open={isDeleteTagModal} onClose={() => setIsDeleteTagModal(false)}>
         <Modal.Title>Delete {type === 'setup' ? 'Setup' : 'Mistake'}</Modal.Title>
         <Modal.Subtitle>
@@ -33,8 +34,8 @@ function TagItem({ type, tag, handleDeleteTag }: TagItemProps) {
         </Modal.Action>
         <Modal.Action
           onClick={() => {
-            setIsDeleteTagModal(false)
             handleDeleteTag(tag)
+            setIsDeleteTagModal(null)
           }}
         >
           Delete {type === 'setup' ? 'Setup' : 'Mistake'}
@@ -56,32 +57,24 @@ TagItem.propTypes = {
   handleDeleteTag: PropTypes.func.isRequired
 }
 
-function Tags({ trade, type }: SetupsProps): JSX.Element {
+function Tags({ trade, type, mutate }: SetupsProps): JSX.Element {
   const [, setToast] = useToasts()
   const [tag, setTag] = useState('')
-  const [tags, setTags] = useState([])
-
-  useEffect(() => {
-    if (type === 'setup') {
-      setTags(trade.setups)
-    }
-
-    if (type === 'mistake') {
-      setTags(trade.mistakes)
-    }
-  }, [])
 
   async function handleAddSetup(e) {
     try {
       if (e.target.value && e.key === 'Enter') {
         setTag('')
 
-        if (!tags.includes(e.target.value)) {
-          const newtags: string[] = [...tags, e.target.value]
-          setTags(newtags)
+        if (!trade[type === 'setup' ? 'setups' : 'mistakes'].includes(e.target.value)) {
+          const newtags: string[] = [
+            ...trade[type === 'setup' ? 'setups' : 'mistakes'],
+            e.target.value
+          ]
 
           const changedTrade = { ...trade, [type === 'setup' ? 'setups' : 'mistakes']: newtags }
           await axios.post('/api/v1/trade/update-trade', { changedTrade })
+          mutate()
           setToast({
             text: `${type === 'setup' ? 'Setup' : 'Mistake'} saved successfully!`,
             type: 'success',
@@ -95,13 +88,16 @@ function Tags({ trade, type }: SetupsProps): JSX.Element {
     }
   }
 
-  async function handleDeleteTag(setup) {
+  async function handleDeleteTag(tag) {
     try {
-      const index = tags.indexOf(setup)
-      const newtags: string[] = [...tags.slice(0, index), ...tags.slice(index + 1)]
-      setTags(newtags)
+      const index = trade[type === 'setup' ? 'setups' : 'mistakes'].indexOf(tag)
+      const newtags: string[] = [
+        ...trade[type === 'setup' ? 'setups' : 'mistakes'].slice(0, index),
+        ...trade[type === 'setup' ? 'setups' : 'mistakes'].slice(index + 1)
+      ]
       const changedTrade = { ...trade, [type === 'setup' ? 'setups' : 'mistakes']: newtags }
       await axios.post('/api/v1/trade/update-trade', { changedTrade })
+      mutate()
       setToast({
         text: `${type === 'setup' ? 'Setup' : 'Mistake'} deleted successfully!`,
         type: 'success',
@@ -126,7 +122,7 @@ function Tags({ trade, type }: SetupsProps): JSX.Element {
           onKeyDown={handleAddSetup}
         />
         <Spacer />
-        {tags.map(tag => {
+        {trade[type === 'setup' ? 'setups' : 'mistakes'].map(tag => {
           return <TagItem key={tag} type={type} tag={tag} handleDeleteTag={handleDeleteTag} />
         })}
       </Card.Content>
@@ -155,11 +151,13 @@ type SetupsProps = {
     setups: string[]
     mistakes: string[]
   }
+  mutate: () => void
 }
 
 Tags.propTypes = {
   type: PropTypes.string.isRequired,
-  trade: PropTypes.object.isRequired
+  trade: PropTypes.object.isRequired,
+  mutate: PropTypes.func.isRequired
 }
 
 export default Tags

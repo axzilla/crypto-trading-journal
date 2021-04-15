@@ -54,7 +54,7 @@ function TradeTable({ trade, setIsDeleteTradeModalOpen }: TradeTableProps): JSX.
                 <Text
                   type={trade.status === 'WINNER' || trade.returnPercent >= 0 ? 'warning' : 'error'}
                 >
-                  {trade.returnPercent} %
+                  {nbs(trade.returnPercent + ' %')}
                 </Text>
               ),
               status: (

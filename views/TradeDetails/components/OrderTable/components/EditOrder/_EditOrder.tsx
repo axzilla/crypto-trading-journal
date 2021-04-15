@@ -22,14 +22,12 @@ function EditOrder({ order, handleUpdateOrder }: EditOrderProps): JSX.Element {
         auto
         size="small"
       />
-      {isOrderModalOpen && (
-        <OrderModal
-          order={order}
-          isOrderModalOpen={isOrderModalOpen}
-          setIsOrderModalOpen={setIsOrderModalOpen}
-          handleUpdateOrder={handleUpdateOrder}
-        />
-      )}
+      <OrderModal
+        order={order}
+        isOrderModalOpen={isOrderModalOpen}
+        setIsOrderModalOpen={setIsOrderModalOpen}
+        handleUpdateOrder={handleUpdateOrder}
+      />
     </>
   )
 }
