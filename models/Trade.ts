@@ -32,6 +32,7 @@ const TradeSchema = new Schema({
   setups: { type: Array },
   mistakes: { type: Array },
   notes: { type: String },
+  images: { type: Array },
   //
   dateCreated: { type: Date, required: true, default: Date.now() },
   dateUpdated: { type: Date, required: true, default: Date.now() }

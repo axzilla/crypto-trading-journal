@@ -233,7 +233,7 @@ function TradeDetails(): JSX.Element {
         </Grid>
       </Grid.Container>
       <Spacer y={1} />
-      <Images trade={data} />
+      <Images trade={data} mutate={mutate} />
       <Spacer y={1} />
       <Notes trade={data} />
     </div>

@@ -1,16 +1,19 @@
 // Packages
+import { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
-// import axios from 'axios'
+import axios from 'axios'
+import ResizeObserver from 'react-resize-observer'
 
 // Geist UI
-// import { Text, Card, useToasts, Spacer, Grid, Button } from '@geist-ui/react'
-import { Text, Card, Spacer, Grid, Button } from '@geist-ui/react'
-import { Trash as TrashIcon } from '@geist-ui/react-icons'
+import { Text, Card, useToasts, Spacer, Grid, Button, Loading, Modal } from '@geist-ui/react'
+import { Trash as TrashIcon, Upload as UploadIcon } from '@geist-ui/react-icons'
 
-function Images({ trade }: SetupsProps): JSX.Element {
-  // const [, setToast] = useToasts()
-
-  console.log(trade) // eslint-disable-line
+function Images({ trade, mutate }: SetupsProps): JSX.Element {
+  const [isLoading, setIslLoading] = useState(false)
+  const [, setToast] = useToasts()
+  const hiddenFileInput = useRef(null)
+  const [width, setWidth] = useState(window.innerWidth)
+  const [isImageModal, setIsImageModal] = useState(null)
 
   // async function handleAddImage() {
   //   try {
@@ -32,53 +35,100 @@ function Images({ trade }: SetupsProps): JSX.Element {
   //   }
   // }
 
+  async function handleUploadImages(e) {
+    try {
+      setIslLoading(true)
+      const formData = new FormData()
+      formData.append('tradeId', trade._id)
+      Array.from(e.target.files).map((image: Blob) => formData.append('image', image))
+      await axios.post('/api/v1/image/create-images', formData)
+      await mutate()
+      setToast({ text: 'Image(s) added successfully!', type: 'success', delay: 5000 })
+      setIslLoading(false)
+    } catch (error) {
+      setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
+      setIslLoading(false)
+      if (error) throw error
+    }
+  }
+
   return (
-    <Card style={{ width: '100%' }}>
-      <Card.Content>
-        <Grid.Container justify="space-between">
-          <Text b>Images</Text>
-          <Button size="small" auto>
-            Add Image
-          </Button>
-        </Grid.Container>
-        <Spacer />
-        <Grid.Container gap={2}>
-          {[
-            'https://images.unsplash.com/photo-1593642533144-3d62aa4783ec?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
-            'https://images.unsplash.com/photo-1618450684024-55f2d7b7740a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80',
-            'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
-            'https://www.tradingview.com/x/LcUcHZYB/',
-            'https://www.tradingview.com/x/LcUcHZYB/',
-            'https://www.tradingview.com/x/LcUcHZYB/'
-          ].map(image => {
-            return (
-              <Grid key={Math.random()} xs={12} md={6}>
-                <Card
-                  style={{
-                    background: `url(${image})`,
-                    backgroundSize: 'cover',
-                    width: '100%',
-                    height: 200,
-                    position: 'relative'
-                  }}
-                >
-                  <Button
-                    style={{ position: 'absolute', top: 0, right: 0, margin: 5 }}
-                    size="small"
-                    auto
-                    iconRight={<TrashIcon />}
-                  />
-                </Card>
-              </Grid>
-            )
-          })}
-        </Grid.Container>
-      </Card.Content>
-    </Card>
+    <>
+      <Card style={{ width: '100%' }}>
+        <Card.Content>
+          <Grid.Container justify="space-between">
+            <Text b>Images</Text>
+            <input
+              accept="image/*"
+              onChange={handleUploadImages}
+              ref={hiddenFileInput}
+              style={{ display: 'none' }}
+              id="raised-button-file"
+              type="file"
+              multiple
+            />
+          </Grid.Container>
+          <Spacer />
+          <Grid.Container gap={2}>
+            {trade.images.map((image: { secure_url: string }) => {
+              return (
+                <Grid key={Math.random()} xs={12} md={6}>
+                  <Card
+                    onClick={() => setIsImageModal(image.secure_url)}
+                    hoverable
+                    style={{
+                      background: `url(${image.secure_url})`,
+                      backgroundSize: 'cover',
+                      height: width,
+                      position: 'relative',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Button
+                      loading={isLoading}
+                      style={{ position: 'absolute', top: 0, right: 0, margin: 10 }}
+                      size="small"
+                      auto
+                      iconRight={<TrashIcon />}
+                    />
+                  </Card>
+                </Grid>
+              )
+            })}
+            <Grid xs={12} md={6}>
+              <Card
+                onClick={() => hiddenFileInput.current.click()}
+                style={{ height: width, cursor: 'pointer' }}
+                hoverable
+              >
+                <ResizeObserver onResize={({ width }) => setWidth(width)} />
+
+                <div style={{ height: width }}>
+                  <Grid.Container style={{ height: '80%' }} justify="center" alignItems="center">
+                    {isLoading ? <Loading type="warning" /> : <UploadIcon />}
+                  </Grid.Container>
+                </div>
+              </Card>
+            </Grid>
+          </Grid.Container>
+        </Card.Content>
+      </Card>
+
+      <Modal width="100%" open={isImageModal ? true : false} onClose={() => setIsImageModal(null)}>
+        <img
+          aria-hidden="true"
+          alt="screenshot"
+          onClick={() => setIsImageModal(null)}
+          src={isImageModal}
+          style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' }}
+        />
+      </Modal>
+    </>
   )
 }
 
 type SetupsProps = {
+  mutate: () => void
   trade: {
     _id: string
     type: string
@@ -97,10 +147,12 @@ type SetupsProps = {
     notes: string
     setups: string[]
     mistakes: string[]
+    images: []
   }
 }
 
 Images.propTypes = {
+  mutate: PropTypes.func.isRequired,
   trade: PropTypes.object.isRequired
 }
 
