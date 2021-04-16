@@ -144,7 +144,11 @@ function TradeFeed(): JSX.Element {
         <Table
           onRow={trade => router.push(`/trades/${trade._id}`)}
           data={data
-            .sort((a, b) => b.created_at - a.created_at)
+            .sort((a, b): number => {
+              if (new Date(a.dateCreated) < new Date(b.dateCreated)) return -1
+              else if (new Date(a.dateCreated) > new Date(b.dateCreated)) return 1
+              else return 0
+            })
             .map(trade => {
               const {
                 _id,
