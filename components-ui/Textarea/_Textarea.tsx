@@ -1,7 +1,7 @@
 // Packages
 import React from 'react'
 import PropTypes from 'prop-types'
-import { GeistUIThemes, Input as GeistInput, Text } from '@geist-ui/react'
+import { GeistUIThemes, Textarea as GeistTextarea, Text } from '@geist-ui/react'
 
 // Utils
 import makeStyles from 'utils/makeStyles'
@@ -10,13 +10,13 @@ const useStyles = makeStyles((ui: GeistUIThemes) => ({
   label: { marginBottom: ui.layout.gapHalf }
 }))
 
-export default function Input({
+export default function Textarea({
   onChange,
-  onKeyDown,
   value,
   placeholder,
   label,
   fullWidth,
+  onBlur,
   ...rest
 }: Props): JSX.Element {
   const classes = useStyles()
@@ -25,9 +25,10 @@ export default function Input({
     <div style={{ width: fullWidth && '100%' }}>
       {label && <Text className={classes.label}>{label}</Text>}
 
-      <GeistInput
+      <GeistTextarea
+        onBlur={onBlur}
+        resize="inherit"
         onChange={onChange}
-        onKeyDown={onKeyDown}
         value={value}
         placeholder={placeholder}
         width={fullWidth && '100%'}
@@ -38,8 +39,8 @@ export default function Input({
 }
 
 type Props = {
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onKeyDown?: (e: React.KeyboardEvent<unknown>) => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onBlur?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   value?: string
   type?: string
   placeholder?: string
@@ -47,9 +48,8 @@ type Props = {
   fullWidth?: boolean
 }
 
-Input.propTypes = {
+Textarea.propTypes = {
   onChange: PropTypes.func,
-  onKeyDown: PropTypes.func,
   type: PropTypes.string,
   placeholder: PropTypes.string,
   label: PropTypes.string,

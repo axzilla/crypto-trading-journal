@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types'
 
 // Geist UI
-import { Modal, Text } from '@geist-ui/react'
+import { Modal } from '@geist-ui/react'
 
 function DeleteTradeModal({
   isDeleteTradeModalOpen,
@@ -16,11 +16,6 @@ function DeleteTradeModal({
     >
       <Modal.Title>Delete Trade</Modal.Title>
       <Modal.Subtitle>This trade will be deleted.</Modal.Subtitle>
-      <Modal.Content>
-        <Text type="error" style={{ textAlign: 'center' }}>
-          Warning: This is not reversible. Please be certain.
-        </Text>
-      </Modal.Content>
       <Modal.Action passive onClick={() => setIsDeleteTradeModalOpen(false)}>
         Cancel
       </Modal.Action>

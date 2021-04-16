@@ -6,7 +6,17 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
 
 // Geist UI
-import { GeistUIThemes, Button, Table, Tag, useToasts, Text, Spinner, Grid } from '@geist-ui/react'
+import {
+  GeistUIThemes,
+  Button,
+  Table,
+  Tag,
+  useToasts,
+  Text,
+  Spinner,
+  Grid,
+  Spacer
+} from '@geist-ui/react'
 
 // Components Global
 import { TradeModal } from '../../components'
@@ -18,40 +28,13 @@ import formatCurrency from '@utils/formatCurrency'
 import formatQuantity from '@utils/formatQuantity'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
-  root: { minHeight: 'calc(100vh - 135px)' },
-  content: {
-    display: 'flex',
-    flexDirection: 'row',
+  root: {
+    minHeight: 'calc(100vh - 135px)',
     width: ui.layout.pageWidthWithMargin,
     maxWidth: '100%',
     padding: `calc(${ui.layout.gap} * 2) ${ui.layout.pageMargin} calc(${ui.layout.gap} * 2)`,
     boxSizing: 'border-box',
     margin: '0 auto'
-  },
-  name: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    flex: 1
-  },
-  title: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
-  },
-  username: {
-    lineHeight: 1
-  },
-  integrationsTitle: {
-    textTransform: 'uppercase',
-    color: `${ui.palette.accents_5} !important`,
-    fontWeight: 500,
-    fontSize: 12,
-    margin: 0
-  },
-  integrationsUsername: {
-    margin: '0 0 0 4px',
-    fontWeight: 0
   }
 }))
 
@@ -151,20 +134,21 @@ function TradeFeed(): JSX.Element {
     </Grid.Container>
   ) : (
     <div className={classes.root}>
-      <div className={classes.content}>
-        <div className={classes.name}>
-          <div className={classes.title}>
-            <Button onClick={() => setIsTradeModalOpen(true)} type="secondary" auto>
-              Add Trade
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div style={{ overflow: 'scroll' }} className={classes.content}>
+      <Grid.Container justify="flex-end">
+        <Button onClick={() => setIsTradeModalOpen(true)} type="secondary" auto>
+          Add Trade
+        </Button>
+      </Grid.Container>
+      <Spacer />
+      <div style={{ overflow: 'scroll' }}>
         <Table
           onRow={trade => router.push(`/trades/${trade._id}`)}
           data={data
-            .sort((a, b) => b.created_at - a.created_at)
+            .sort((a, b): number => {
+              if (new Date(a.dateCreated) < new Date(b.dateCreated)) return -1
+              else if (new Date(a.dateCreated) > new Date(b.dateCreated)) return 1
+              else return 0
+            })
             .map(trade => {
               const {
                 _id,
@@ -227,7 +211,7 @@ function TradeFeed(): JSX.Element {
                 ),
                 returnPercent: (
                   <Text type={status === 'WINNER' || returnPercent >= 0 ? 'warning' : 'error'}>
-                    {returnPercent} %
+                    {nbs(returnPercent.toFixed(2) + ' %')}
                   </Text>
                 ),
                 result: (

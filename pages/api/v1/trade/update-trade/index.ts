@@ -13,10 +13,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
     await dbConnect()
     const session = await getSession({ req })
     const { changedTrade } = req.body
+
     const updatedTrade = await Trade.findOneAndUpdate(
       { _id: changedTrade._id, user: session.user._id },
       changedTrade
     )
+
     res.status(200).json(updatedTrade)
   } catch (error) {
     if (error) throw error
