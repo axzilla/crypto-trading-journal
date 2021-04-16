@@ -207,7 +207,7 @@ function TradeFeed(): JSX.Element {
                 ),
                 returnPercent: (
                   <Text type={status === 'WINNER' || returnPercent >= 0 ? 'warning' : 'error'}>
-                    {nbs(returnPercent + ' %')}
+                    {nbs(returnPercent.toFixed(2) + ' %')}
                   </Text>
                 ),
                 result: (
