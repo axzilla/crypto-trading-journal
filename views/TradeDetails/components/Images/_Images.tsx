@@ -15,27 +15,7 @@ function Images({ trade, mutate }: SetupsProps): JSX.Element {
   const [width, setWidth] = useState(window.innerWidth)
   const [isImageModal, setIsImageModal] = useState(null)
 
-  // async function handleAddImage() {
-  //   try {
-  //     // await axios.post('/api/v1/trade/update-trade', { changedTrade })
-  //     setToast({ text: 'Image saved successfully!', type: 'success', delay: 5000 })
-  //   } catch (error) {
-  //     setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
-  //     if (error) throw error
-  //   }
-  // }
-
-  // async function handleDeleteImage() {
-  //   try {
-  //     // await axios.post('/api/v1/trade/update-trade', { changedTrade })
-  //     setToast({ text: 'Image saved successfully!', type: 'success', delay: 5000 })
-  //   } catch (error) {
-  //     setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
-  //     if (error) throw error
-  //   }
-  // }
-
-  async function handleUploadImages(e) {
+  async function handleAddImages(e) {
     try {
       setIslLoading(true)
       const formData = new FormData()
@@ -52,6 +32,20 @@ function Images({ trade, mutate }: SetupsProps): JSX.Element {
     }
   }
 
+  async function handleDeleteImage(image) {
+    try {
+      setIslLoading(true)
+      await axios.post('/api/v1/image/delete-image', { tradeId: trade._id, image })
+      await mutate()
+      setToast({ text: 'Image deleted successfully!', type: 'success', delay: 5000 })
+      setIslLoading(false)
+    } catch (error) {
+      setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
+      setIslLoading(false)
+      if (error) throw error
+    }
+  }
+
   return (
     <>
       <Card style={{ width: '100%' }}>
@@ -60,7 +54,7 @@ function Images({ trade, mutate }: SetupsProps): JSX.Element {
             <Text b>Images</Text>
             <input
               accept="image/*"
-              onChange={handleUploadImages}
+              onChange={handleAddImages}
               ref={hiddenFileInput}
               style={{ display: 'none' }}
               id="raised-button-file"
@@ -85,6 +79,10 @@ function Images({ trade, mutate }: SetupsProps): JSX.Element {
                     }}
                   >
                     <Button
+                      onClick={e => {
+                        e.stopPropagation()
+                        handleDeleteImage(image)
+                      }}
                       loading={isLoading}
                       style={{ position: 'absolute', top: 0, right: 0, margin: 10 }}
                       size="small"
