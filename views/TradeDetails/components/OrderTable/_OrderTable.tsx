@@ -19,10 +19,9 @@ import {
 
 // Geist UI
 import { Table, Tag, Grid, Button, Spacer, Card, Text, useToasts } from '@geist-ui/react'
-import { Trash as TrashIcon } from '@geist-ui/react-icons'
 
 // Local Components
-import { EditOrder } from './components'
+import { EditOrder, DeleteOrder } from './components'
 
 // Global Components
 import { OrderModal } from 'components'
@@ -132,14 +131,8 @@ function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
                   date: nbs(moment(date).format('MMMM D, YYYY, h:mm')),
                   actions: (
                     <Grid.Container wrap="nowrap">
-                      <Button
-                        disabled={trade.orders.length < 2}
-                        onClick={() => handleCrdOrder(order, 'delete')}
-                        iconRight={<TrashIcon />}
-                        auto
-                        size="small"
-                      />
-                      <Spacer y={0.5} />
+                      <DeleteOrder trade={trade} order={order} handleCrdOrder={handleCrdOrder} />
+                      <Spacer x={0.5} />
                       <EditOrder order={order} handleCrdOrder={handleCrdOrder} />
                     </Grid.Container>
                   )

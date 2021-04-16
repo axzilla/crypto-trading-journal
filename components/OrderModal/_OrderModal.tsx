@@ -25,6 +25,15 @@ function OrderModal({
     order && setOrderData(order)
   }, [order])
 
+  function resetForm() {
+    setOrderData({
+      side: '',
+      date: new Date(),
+      price: null,
+      quantity: null
+    })
+  }
+
   return (
     <Modal open={isOrderModalOpen} onClose={() => setIsOrderModalOpen(false)}>
       <Modal.Title>{order ? 'Edit Order' : 'Add Order'}</Modal.Title>
@@ -70,6 +79,7 @@ function OrderModal({
         disabled={!orderData.date || !orderData.price || !orderData.quantity || !orderData.side}
         onClick={() => {
           handleCrdOrder(orderData, order ? 'update' : 'create')
+          resetForm()
           setIsOrderModalOpen(false)
         }}
       >
@@ -89,7 +99,7 @@ type Props = {
 OrderModal.propTypes = {
   isOrderModalOpen: PropTypes.bool.isRequired,
   setIsOrderModalOpen: PropTypes.func.isRequired,
-  order: PropTypes.func,
+  order: PropTypes.object,
   handleCrdOrder: PropTypes.func.isRequired
 }
 
