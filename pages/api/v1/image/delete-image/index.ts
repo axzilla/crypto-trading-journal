@@ -28,7 +28,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
 
     res.status(200).json('success')
   } catch (error) {
-    res.status(400).json(process.env.CLOUDINARY_API_KEY)
     if (error) throw error
+    res.status(400).json('error')
   }
 }
