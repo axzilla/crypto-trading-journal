@@ -2,18 +2,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/client'
 import formidable from 'formidable'
-import cloudinary from 'cloudinary'
 import _ from 'lodash'
+
+// Utils
+import cloudinary from 'utils/cloudinary'
 
 // DB
 import dbConnect from 'utils/dbConnect'
 import Trade from 'models/Trade'
-
-cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-})
 
 export const config = { api: { bodyParser: false } }
 
