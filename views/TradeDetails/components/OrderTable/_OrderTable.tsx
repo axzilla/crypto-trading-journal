@@ -1,7 +1,6 @@
 // Packages
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import axios from 'axios'
 
 // Local Utils
@@ -18,18 +17,13 @@ import {
 } from './utils'
 
 // Geist UI
-import { Table, Tag, Grid, Button, Spacer, Card, Text, useToasts } from '@geist-ui/react'
+import { Grid, Button, Spacer, Text, useToasts } from '@geist-ui/react'
 
 // Local Components
-import { EditOrder, DeleteOrder } from './components'
+import { Item } from './components'
 
 // Global Components
 import { OrderModal } from 'components'
-
-// Utils
-import nbs from 'utils/nbs'
-import formatCurrency from '@utils/formatCurrency'
-import formatQuantity from 'utils/formatQuantity'
 
 function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
   const [, setToast] = useToasts()
@@ -102,52 +96,34 @@ function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
 
   return (
     <>
-      <Card>
-        <Grid.Container justify="space-between" alignItems="flex-end">
-          <Text style={{ margin: 0 }} h5>
-            History
-          </Text>
-          <Button onClick={() => setIsOrderModalOpen(true)} size="small" auto>
-            Add Order
-          </Button>
-        </Grid.Container>
-        <Spacer y={0.5} />
-        <div style={{ overflow: 'scroll' }}>
-          <Table
-            data={trade.orders
-              .sort((a, b): number => {
-                if (new Date(a.date) < new Date(b.date)) return -1
-                else if (new Date(a.date) > new Date(b.date)) return 1
-                else return 0
-              })
-              .map(order => {
-                const { side, price, quantity, date } = order
-
-                return {
-                  side: <Tag type="warning">{side.toUpperCase()}</Tag>,
-                  quantity: formatQuantity(quantity),
-                  price: formatCurrency(price),
-                  value: formatCurrency(price * quantity),
-                  date: nbs(moment(date).format('MMMM D, YYYY, h:mm')),
-                  actions: (
-                    <Grid.Container wrap="nowrap">
-                      <DeleteOrder trade={trade} order={order} handleCrdOrder={handleCrdOrder} />
-                      <Spacer x={0.5} />
-                      <EditOrder order={order} handleCrdOrder={handleCrdOrder} />
-                    </Grid.Container>
-                  )
-                }
-              })}
-          >
-            <Table.Column prop="side" label="Side" />
-            <Table.Column prop="quantity" label="Quantity" />
-            <Table.Column prop="price" label="Price" />
-            <Table.Column prop="value" label="Value" />
-            <Table.Column prop="date" label="Date" />
-            <Table.Column prop="actions" label="actions" />
-          </Table>
-        </div>
-      </Card>
+      <Grid.Container justify="space-between" alignItems="flex-end">
+        <Text style={{ margin: 0 }} h5>
+          History
+        </Text>
+        <Button onClick={() => setIsOrderModalOpen(true)} size="small" auto>
+          Add Order
+        </Button>
+      </Grid.Container>
+      <Spacer />
+      <Grid.Container gap={1}>
+        {trade.orders
+          .sort((a, b): number => {
+            if (new Date(a.date) < new Date(b.date)) return -1
+            else if (new Date(a.date) > new Date(b.date)) return 1
+            else return 0
+          })
+          .map((order, index) => {
+            return (
+              <Grid xs={24} key={index}>
+                <Item
+                  order={order}
+                  handleCrdOrder={handleCrdOrder}
+                  isLastItem={trade.orders.length < 2}
+                />
+              </Grid>
+            )
+          })}
+      </Grid.Container>
 
       <OrderModal
         isOrderModalOpen={isOrderModalOpen}

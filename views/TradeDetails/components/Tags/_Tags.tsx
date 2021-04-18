@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 
 // Geist UI
-import { Text, Card, useToasts, Spacer, Tag, Modal } from '@geist-ui/react'
+import { Text, Card, useToasts, Spacer, Tag, Modal, Grid } from '@geist-ui/react'
 
 // Components UI
 import { Input } from 'components-ui'
@@ -110,23 +110,25 @@ function Tags({ trade, type, mutate }: SetupsProps): JSX.Element {
   }
 
   return (
-    <Card style={{ width: '100%' }}>
-      <Card.Content>
-        <Text b>{type === 'setup' ? 'Setups' : 'Mistakes'}</Text>
-        <Spacer />
-        <Input
-          placeholder="Add with enter..."
-          fullWidth
-          value={tag}
-          onChange={e => setTag(e.target.value)}
-          onKeyDown={handleAddSetup}
-        />
-        <Spacer />
-        {trade[type === 'setup' ? 'setups' : 'mistakes'].map(tag => {
-          return <TagItem key={tag} type={type} tag={tag} handleDeleteTag={handleDeleteTag} />
-        })}
-      </Card.Content>
-    </Card>
+    <Grid.Container>
+      <Text b>{type === 'setup' ? 'Setups' : 'Mistakes'}</Text>
+      <Spacer y={2} />
+      <Card style={{ width: '100%' }}>
+        <Card.Content>
+          <Input
+            placeholder="Add with enter..."
+            fullWidth
+            value={tag}
+            onChange={e => setTag(e.target.value)}
+            onKeyDown={handleAddSetup}
+          />
+          <Spacer />
+          {trade[type === 'setup' ? 'setups' : 'mistakes'].map(tag => {
+            return <TagItem key={tag} type={type} tag={tag} handleDeleteTag={handleDeleteTag} />
+          })}
+        </Card.Content>
+      </Card>
+    </Grid.Container>
   )
 }
 

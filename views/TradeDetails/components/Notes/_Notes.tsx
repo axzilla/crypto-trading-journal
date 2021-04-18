@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 
 // Geist UI
-import { Text, Card, useToasts, Spacer } from '@geist-ui/react'
+import { Text, useToasts, Spacer, Grid } from '@geist-ui/react'
 
 // Components UI
 import { Textarea } from 'components-ui'
@@ -25,19 +25,17 @@ function Notes({ trade }: NotesProps): JSX.Element {
   }
 
   return (
-    <Card>
-      <Card.Content>
-        <Text b>Notes</Text>
-        <Spacer />
-        <Textarea
-          placeholder="Type here your notes..."
-          onBlur={handleUpdateNotes}
-          fullWidth
-          value={notes}
-          onChange={e => setNotes(e.target.value)}
-        />
-      </Card.Content>
-    </Card>
+    <Grid.Container>
+      <Text b>Notes</Text>
+      <Spacer y={2} />
+      <Textarea
+        placeholder="Type here your notes..."
+        onBlur={handleUpdateNotes}
+        fullWidth
+        value={notes}
+        onChange={e => setNotes(e.target.value)}
+      />
+    </Grid.Container>
   )
 }
 

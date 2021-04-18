@@ -52,70 +52,66 @@ function Images({ trade, mutate }: SetupsProps): JSX.Element {
   }
 
   return (
-    <>
-      <Card style={{ width: '100%' }}>
-        <Card.Content>
-          <Grid.Container justify="space-between">
-            <Text b>Images</Text>
-            <input
-              accept="image/*"
-              onChange={handleAddImages}
-              ref={hiddenFileInput}
-              style={{ display: 'none' }}
-              id="raised-button-file"
-              type="file"
-              multiple
-            />
-          </Grid.Container>
-          <Spacer />
-          <Grid.Container gap={2}>
-            {trade.images.map((image: { secure_url: string }) => {
-              return (
-                <Grid key={Math.random()} xs={12} md={6}>
-                  <Card
-                    onClick={() => setIsImagePreviewModal(image.secure_url)}
-                    hoverable
-                    style={{
-                      background: `url(${image.secure_url})`,
-                      backgroundSize: 'cover',
-                      height: width,
-                      position: 'relative',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <Button
-                      onClick={e => {
-                        e.stopPropagation()
-                        setIsImageDeleteModal(image)
-                      }}
-                      loading={isLoading}
-                      style={{ position: 'absolute', top: 0, right: 0, margin: 10 }}
-                      size="small"
-                      auto
-                      iconRight={<TrashIcon />}
-                    />
-                  </Card>
-                </Grid>
-              )
-            })}
-            <Grid xs={12} md={6}>
+    <Grid.Container>
+      <Text b>Images</Text>
+      <Grid.Container justify="space-between">
+        <input
+          accept="image/*"
+          onChange={handleAddImages}
+          ref={hiddenFileInput}
+          style={{ display: 'none' }}
+          id="raised-button-file"
+          type="file"
+          multiple
+        />
+      </Grid.Container>
+      <Spacer />
+      <Grid.Container gap={2}>
+        {trade.images.map((image: { secure_url: string }) => {
+          return (
+            <Grid key={Math.random()} xs={12} md={6}>
               <Card
-                onClick={() => hiddenFileInput.current.click()}
-                style={{ height: width, cursor: 'pointer' }}
+                onClick={() => setIsImagePreviewModal(image.secure_url)}
                 hoverable
+                style={{
+                  background: `url(${image.secure_url})`,
+                  backgroundSize: 'cover',
+                  height: width,
+                  position: 'relative',
+                  cursor: 'pointer'
+                }}
               >
-                <ResizeObserver onResize={({ width }) => setWidth(width)} />
-
-                <div style={{ height: width }}>
-                  <Grid.Container style={{ height: '80%' }} justify="center" alignItems="center">
-                    {isLoading ? <Loading type="warning" /> : <UploadIcon />}
-                  </Grid.Container>
-                </div>
+                <Button
+                  onClick={e => {
+                    e.stopPropagation()
+                    setIsImageDeleteModal(image)
+                  }}
+                  loading={isLoading}
+                  style={{ position: 'absolute', top: 0, right: 0, margin: 10 }}
+                  size="small"
+                  auto
+                  iconRight={<TrashIcon />}
+                />
               </Card>
             </Grid>
-          </Grid.Container>
-        </Card.Content>
-      </Card>
+          )
+        })}
+        <Grid xs={12} md={6}>
+          <Card
+            onClick={() => hiddenFileInput.current.click()}
+            style={{ height: width, cursor: 'pointer' }}
+            hoverable
+          >
+            <ResizeObserver onResize={({ width }) => setWidth(width)} />
+
+            <div style={{ height: width }}>
+              <Grid.Container style={{ height: '80%' }} justify="center" alignItems="center">
+                {isLoading ? <Loading type="warning" /> : <UploadIcon />}
+              </Grid.Container>
+            </div>
+          </Card>
+        </Grid>
+      </Grid.Container>
 
       {/* Image preview modal */}
       <Modal
@@ -141,7 +137,7 @@ function Images({ trade, mutate }: SetupsProps): JSX.Element {
         </Modal.Action>
         <Modal.Action onClick={handleDeleteImage}>Delete Image</Modal.Action>
       </Modal>
-    </>
+    </Grid.Container>
   )
 }
 
