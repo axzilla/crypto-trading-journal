@@ -8,10 +8,12 @@ import dbConnect from 'utils/dbConnect'
 // Models
 import Trade from 'models/Trade'
 
-export default async function (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function (req: NextApiRequest, res: NextApiResponse): Promise<unknown> {
   try {
-    await dbConnect()
     const session = await getSession({ req })
+    if (!session) return res.status(401)
+
+    await dbConnect()
     const { changedTrade } = req.body
 
     const updatedTrade = await Trade.findOneAndUpdate(
@@ -21,7 +23,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
 
     res.status(200).json(updatedTrade)
   } catch (error) {
-    if (error) throw error
-    res.status(400).json('error')
+    res.status(400).json(error)
   }
 }

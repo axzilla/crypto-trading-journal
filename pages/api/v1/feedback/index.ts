@@ -7,10 +7,12 @@ type Data = {
   message: string
 }
 
-export default async function (req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> {
+export default async function (req: NextApiRequest, res: NextApiResponse<Data>): Promise<unknown> {
   try {
-    const { feedback } = req.body
     const session = await getSession({ req })
+    if (!session) return res.status(401)
+
+    const { feedback } = req.body
 
     const transporter = nodemailer.createTransport({
       port: 465,
@@ -27,18 +29,18 @@ export default async function (req: NextApiRequest, res: NextApiResponse<Data>):
       to: process.env.EMAIL_USERNAME,
       subject: 'Crypto Trading Journal Feedback!',
       html: `
-        <p>From:</p>
-        <p>${session.user.email}</p>
-        <p>Message:</p>
-        <p>${feedback}</p>
-      `
+          <p>From:</p>
+          <p>${session.user.email}</p>
+          <p>Message:</p>
+          <p>${feedback}</p>
+        `
     }
 
     const mailResponse = await transporter.sendMail(mailData)
-    console.log(mailResponse) // eslint-disable-line
+      console.log(mailResponse) // eslint-disable-line
 
     res.status(200).json({ message: 'success' })
   } catch (error) {
-    if (error) throw error
+    res.status(400).json(error)
   }
 }

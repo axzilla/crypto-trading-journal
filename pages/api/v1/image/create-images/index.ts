@@ -13,10 +13,13 @@ import Trade from 'models/Trade'
 
 export const config = { api: { bodyParser: false } }
 
-export default async function (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function (req: NextApiRequest, res: NextApiResponse): Promise<unknown> {
   try {
-    await dbConnect()
     const session = await getSession({ req })
+    if (!session) return res.status(401)
+
+    await dbConnect()
+
     const folder =
       process.env.NODE_ENV === 'development'
         ? '/crypto-trading-journal/development/trade/images'
@@ -55,7 +58,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
       }
     })
   } catch (error) {
-    if (error) throw error
-    res.status(400).json('error')
+    res.status(400).json(error)
   }
 }

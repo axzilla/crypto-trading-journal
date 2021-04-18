@@ -7,14 +7,15 @@ import dbConnect from 'utils/dbConnect'
 
 import Trade from 'models/Trade'
 
-export default async function (req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function (req: NextApiRequest, res: NextApiResponse): Promise<unknown> {
   try {
-    await dbConnect()
     const session = await getSession({ req })
+    if (!session) return res.status(401)
+
+    await dbConnect()
     const foundTrade = await Trade.find({ user: session.user._id })
     res.status(200).json(foundTrade)
   } catch (error) {
-    if (error) throw error
-    res.status(400).json('error')
+    res.status(400).json(error)
   }
 }
