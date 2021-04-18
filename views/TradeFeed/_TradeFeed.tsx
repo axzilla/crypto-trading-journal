@@ -45,7 +45,9 @@ function TradeFeed(): JSX.Element {
   const [, setToast] = useToasts()
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false)
   const [exchangesAll, setExchangesAll] = useState([])
+  const [symbolsAll, setSymbolsAll] = useState([])
   const [exchangesRelated, setExchangesRelated] = useState([])
+  const [symbolsRelated, setSymbolsRelated] = useState([])
   const [tradeData, setTradeData] = useState({
     // Trade
     exchange: '',
@@ -67,19 +69,25 @@ function TradeFeed(): JSX.Element {
 
   useEffect(() => {
     handleGetExchanges()
+    handleGetSymbols()
   }, [])
 
   async function handleGetExchanges() {
-    const url = 'https://api.coinmarketcap.com/data-api/v3/map/all?listing_status=active,untracked'
-    const {
-      data: {
-        data: { exchangeMap }
-      }
-    } = await axios.get(url)
+    const { data: exchanges } = await axios.get('/api/v1/get-exchanges')
 
     setExchangesAll(
-      exchangeMap.map(exchange => {
+      exchanges.map(exchange => {
         return { label: exchange.name, value: exchange.name }
+      })
+    )
+  }
+
+  async function handleGetSymbols() {
+    const { data: symbols } = await axios.get('/api/v1/get-symbols')
+
+    setSymbolsAll(
+      symbols.map(symbol => {
+        return { label: symbol.symbol, value: symbol.symbol }
       })
     )
   }
@@ -241,9 +249,15 @@ function TradeFeed(): JSX.Element {
         setIsTradeModalOpen={setIsTradeModalOpen}
         tradeData={tradeData}
         setTradeData={setTradeData}
+        //
+        exchangesAll={exchangesAll}
         exchangesRelated={exchangesRelated}
         setExchangesRelated={setExchangesRelated}
-        exchangesAll={exchangesAll}
+        //
+        symbolsAll={symbolsAll}
+        symbolsRelated={symbolsRelated}
+        setSymbolsRelated={setSymbolsRelated}
+        //
         handleCreateTrade={handleCreateTrade}
       />
     </div>

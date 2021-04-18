@@ -5,17 +5,20 @@ import PropTypes from 'prop-types'
 import { Modal, Grid, Slider, Spacer } from '@geist-ui/react'
 
 // Components UI
-import { Input, Number, Autocomplete, Select, DateTimePicker } from '../../components-ui'
+import { Number, Autocomplete, Select, DateTimePicker } from 'components-ui'
 
 function TradeModal({
   tradeData,
   setTradeData,
   setIsTradeModalOpen,
-  setExchangesRelated,
   handleCreateTrade,
   isTradeModalOpen,
+  exchangesAll,
   exchangesRelated,
-  exchangesAll
+  setExchangesRelated,
+  symbolsAll,
+  symbolsRelated,
+  setSymbolsRelated
 }: Props): JSX.Element {
   return (
     <Modal open={isTradeModalOpen} onClose={() => setIsTradeModalOpen(false)}>
@@ -71,15 +74,23 @@ function TradeModal({
             label="Exchange"
             fullWidth
           />
-          <Input
-            onChange={e => {
-              setTradeData({ ...tradeData, symbol: e.target.value.toUpperCase() })
+
+          <Autocomplete
+            onSearch={value => {
+              if (!value) return setSymbolsRelated([])
+              const relatedOptions: { label: string; value: string }[] = symbolsAll.filter(item => {
+                return item.value.toLowerCase().includes(value.toLowerCase())
+              })
+              setSymbolsRelated(relatedOptions)
+              setTradeData({ ...tradeData, symbol: value })
             }}
-            placeholder="e.g. BTCUSD"
+            value={tradeData.symbol}
+            options={symbolsRelated}
+            placeholder="Start typing"
             label="Symbol"
             fullWidth
-            value={tradeData.symbol}
           />
+
           <Select
             onChange={value => {
               setTradeData({ ...tradeData, side: value })
@@ -164,22 +175,28 @@ type Props = {
     side: string
   }) => void
   handleCreateTrade: () => void
-  setExchangesRelated: (e: { label: string; value: string }[]) => void
   setIsTradeModalOpen: (e: boolean) => void
   isTradeModalOpen: boolean
+  setExchangesRelated: (e: { label: string; value: string }[]) => void
   exchangesRelated: { label: string; value: string }[]
   exchangesAll: { label: string; value: string }[]
+  setSymbolsRelated: (e: { label: string; value: string }[]) => void
+  symbolsRelated: { label: string; value: string }[]
+  symbolsAll: { label: string; value: string }[]
 }
 
 TradeModal.propTypes = {
   tradeData: PropTypes.object.isRequired,
   setTradeData: PropTypes.func.isRequired,
   handleCreateTrade: PropTypes.func.isRequired,
-  setExchangesRelated: PropTypes.func.isRequired,
   setIsTradeModalOpen: PropTypes.func.isRequired,
   isTradeModalOpen: PropTypes.bool.isRequired,
+  exchangesAll: PropTypes.array.isRequired,
+  setExchangesRelated: PropTypes.func.isRequired,
   exchangesRelated: PropTypes.array.isRequired,
-  exchangesAll: PropTypes.array.isRequired
+  symbolsAll: PropTypes.array.isRequired,
+  setSymbolsRelated: PropTypes.func.isRequired,
+  symbolsRelated: PropTypes.array.isRequired
 }
 
 export default TradeModal
