@@ -10,6 +10,11 @@ import formatCurrency from '@utils/formatCurrency'
 import formatQuantity from '@utils/formatQuantity'
 
 function TradeTable({ trade, setIsDeleteTradeModalOpen }: TradeTableProps): JSX.Element {
+  function getStatusColor(trade): Partial<'warning' | 'error'> {
+    if (trade.status === 'WINNER' || trade.returnPercent >= 0) return 'warning'
+    if (trade.status === 'LOOSER' || trade.returnPercent < 0) return 'error'
+  }
+
   return (
     <>
       <Grid.Container alignItems="center" justify="space-between">
@@ -30,53 +35,48 @@ function TradeTable({ trade, setIsDeleteTradeModalOpen }: TradeTableProps): JSX.
             <Description title="Exchange" content={trade.exchange} />
           </Grid>
           <Grid xs>
+            <Description title="Side" content={trade.side} />
+          </Grid>
+          <Grid xs>
             <Description
-              title="Type"
+              title="Qty Total / Open"
+              content={`${formatQuantity(trade.quantityTotal)} / ${formatQuantity(
+                trade.quantityOpen
+              )}`}
+            />
+          </Grid>
+          <Grid xs>
+            <Description
+              title="Cost"
               content={
-                trade.type === 'Leverage' ? (
-                  <>
-                    {trade.type} ({trade.leverage}x)
-                  </>
-                ) : (
-                  trade.type
-                )
+                <>
+                  {formatCurrency(trade.cost)}
+                  <br />
+                  {trade.type === 'Leverage' && <>({trade.leverage}x)</>}
+                </>
               }
             />
           </Grid>
           <Grid xs>
-            <Description title="Side" content={trade.side} />
+            <Description
+              title="Avg Entry / Exit"
+              content={`${formatCurrency(trade.avgEntry)} / ${formatCurrency(trade.avgExit)}`}
+            />
           </Grid>
           <Grid xs>
-            <Description title="Qty Total" content={formatQuantity(trade.quantityTotal)} />
-          </Grid>
-          <Grid xs>
-            <Description title="Qty Open" content={formatQuantity(trade.quantityOpen)} />
-          </Grid>
-          <Grid xs>
-            <Description title="Cost" content={formatCurrency(trade.cost)} />
-          </Grid>
-          <Grid xs>
-            <Description title="Avg Entry" content={formatCurrency(trade.avgEntry)} />
-          </Grid>
-          <Grid xs>
-            <Description title="Avg Exit" content={formatCurrency(trade.avgExit)} />
-          </Grid>
-          <Grid xs>
-            <Description title="PNL $" content={formatCurrency(trade.returnTotal)} />
-          </Grid>
-          <Grid xs>
-            <Description title="PNL %" content={trade.returnPercent.toFixed(2)} />
+            <Description
+              title="PNL"
+              content={
+                <>
+                  {formatCurrency(trade.returnTotal)} ({trade.returnPercent.toFixed(2)}%)
+                </>
+              }
+            />
           </Grid>
           <Grid xs>
             <Description
               title="Status"
-              content={
-                <Dot
-                  type={trade.status === 'WINNER' || trade.returnPercent >= 0 ? 'warning' : 'error'}
-                >
-                  {trade.status}
-                </Dot>
-              }
+              content={<Dot type={getStatusColor(trade)}>{trade.status}</Dot>}
             />
           </Grid>
         </Grid.Container>
