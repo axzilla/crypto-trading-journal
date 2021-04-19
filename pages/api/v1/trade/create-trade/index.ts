@@ -51,6 +51,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
       returnPercent,
       side,
       user: session.user._id,
+      fees,
+      date,
       orders: { date, side, quantity, price, fees }
     })
 

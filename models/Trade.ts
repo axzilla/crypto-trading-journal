@@ -20,7 +20,7 @@ const TradeSchema = new Schema({
   returnTotal: { type: Number, required: true },
   returnPercent: { type: Number, required: true },
   fees: { type: Number, default: 0 },
-  date: { type: Date },
+  date: { type: Date, required: true },
   //
   orders: [
     {

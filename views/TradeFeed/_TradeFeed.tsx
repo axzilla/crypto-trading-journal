@@ -125,7 +125,9 @@ function TradeFeed(): JSX.Element {
         avgEntry: tradeData.price,
         avgExit: 0,
         returnTotal: 0,
-        returnPercent: 0
+        returnPercent: 0,
+        date: tradeData.date,
+        fees: tradeData.fees
       }
 
       const { data: createdTrade } = await axios.post('/api/v1/trade/create-trade', data)
