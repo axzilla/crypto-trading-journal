@@ -130,6 +130,15 @@ function TradeModal({
             label="Quantity"
             fullWidth
           />
+          <Number
+            value={tradeData.fees}
+            onChange={e => {
+              setTradeData({ ...tradeData, fees: parseFloat(e.target.value) })
+            }}
+            placeholder="Fees"
+            label="Fees"
+            fullWidth
+          />
         </Grid.Container>
       </Modal.Content>
       <Modal.Action passive onClick={() => setIsTradeModalOpen(false)}>
@@ -162,6 +171,7 @@ type Props = {
     date: Date
     price: number
     quantity: number
+    fees: number
     side: string
   }
   setTradeData: (e: {
@@ -171,6 +181,7 @@ type Props = {
     symbol: string
     date: Date
     price: number
+    fees: number
     quantity: number
     side: string
   }) => void

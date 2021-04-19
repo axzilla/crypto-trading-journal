@@ -4,28 +4,28 @@ import axios from 'axios'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
+import moment from 'moment'
 
 // Geist UI
 import {
   GeistUIThemes,
+  Card,
   Button,
-  Table,
-  Tag,
   useToasts,
-  Text,
   Spinner,
   Grid,
-  Spacer
+  Spacer,
+  Dot,
+  Description
 } from '@geist-ui/react'
 
 // Components Global
-import { TradeModal } from '../../components'
+import { TradeModal } from 'components'
 
-// Utils
+// Global Utils
 import makeStyles from 'utils/makeStyles'
 import nbs from 'utils/nbs'
 import formatCurrency from '@utils/formatCurrency'
-import formatQuantity from '@utils/formatQuantity'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   root: {
@@ -58,7 +58,8 @@ function TradeFeed(): JSX.Element {
     date: new Date(),
     price: null,
     quantity: null,
-    side: ''
+    side: '',
+    fees: null
   })
 
   const fetcher = url => axios.get(url).then(res => res.data)
@@ -71,6 +72,11 @@ function TradeFeed(): JSX.Element {
     handleGetExchanges()
     handleGetSymbols()
   }, [])
+
+  function getStatusColor(trade): Partial<'warning' | 'error'> {
+    if (trade.status === 'WINNER' || trade.returnPercent >= 0) return 'warning'
+    if (trade.status === 'LOOSER' || trade.returnPercent < 0) return 'error'
+  }
 
   async function handleGetExchanges() {
     const { data: exchanges } = await axios.get('/api/v1/get-exchanges')
@@ -103,7 +109,8 @@ function TradeFeed(): JSX.Element {
       date: new Date(),
       price: null,
       quantity: null,
-      side: ''
+      side: '',
+      fees: null
     })
   }
 
@@ -148,102 +155,74 @@ function TradeFeed(): JSX.Element {
         </Button>
       </Grid.Container>
       <Spacer />
-      <div style={{ overflow: 'scroll' }}>
-        <Table
-          onRow={trade => router.push(`/trades/${trade._id}`)}
-          data={data
-            .sort((a, b): number => {
-              if (new Date(a.dateCreated) < new Date(b.dateCreated)) return -1
-              else if (new Date(a.dateCreated) > new Date(b.dateCreated)) return 1
-              else return 0
-            })
-            .map(trade => {
-              const {
-                _id,
-                type,
-                leverage,
-                exchange,
-                symbol,
-                status,
-                side,
-                cost,
-                quantityOpen,
-                quantityTotal,
-                avgEntry,
-                avgExit,
-                returnPercent,
-                returnTotal
-              }: {
-                _id: string
-                type: string
-                status: string
-                symbol: string
-                exchange: string
-                side: string
-                leverage: number
-                cost: number
-                quantityOpen: number
-                quantityTotal: number
-                avgEntry: number
-                avgExit: number
-                returnPercent: number
-                returnTotal: number
-              } = trade
+      <Grid.Container gap={1}>
+        {data
+          .sort((a, b): number => {
+            if (new Date(a.date) < new Date(b.date)) return -1
+            else if (new Date(a.date) > new Date(b.date)) return 1
+            else return 0
+          })
+          .map(trade => {
+            return (
+              <Grid key={trade._id} xs={24}>
+                <Card
+                  style={{ cursor: 'pointer' }}
+                  hoverable
+                  onClick={() => router.push(`/trades/${trade._id}`)}
+                >
+                  <Grid.Container gap={2}>
+                    <Grid xs>
+                      <Description
+                        title={trade.exchange}
+                        content={
+                          <>
+                            {trade.symbol}
+                            <br />({trade.side})
+                          </>
+                        }
+                      />
+                    </Grid>
+                    <Grid xs>
+                      <Description
+                        title="Cost"
+                        content={
+                          <>
+                            {formatCurrency(trade.cost)}
+                            <br />
+                            {trade.type === 'Leverage' && <>({trade.leverage}x)</>}
+                          </>
+                        }
+                      />
+                    </Grid>
+                    <Grid xs>
+                      <Description
+                        title="PNL"
+                        content={
+                          <>
+                            {formatCurrency(trade.returnTotal)} ({trade.returnPercent.toFixed(2)}%)
+                          </>
+                        }
+                      />
+                    </Grid>
+                    <Grid xs>
+                      <Description
+                        title="Date"
+                        content={nbs(moment(trade.date).format('MMMM D, YYYY, h:mm'))}
+                      />
+                    </Grid>
+                    <Grid xs>
+                      <Description
+                        title="Status"
+                        content={<Dot type={getStatusColor(trade)}>{trade.status}</Dot>}
+                      />
+                    </Grid>
+                  </Grid.Container>
+                </Card>
+              </Grid>
+            )
+          })}
+      </Grid.Container>
 
-              return {
-                _id,
-                type:
-                  type === 'Leverage' ? (
-                    <>
-                      {type} ({leverage}x)
-                    </>
-                  ) : (
-                    type
-                  ),
-                symbol: (
-                  <Tag invert type="warning">
-                    {symbol.toUpperCase()}
-                  </Tag>
-                ),
-                exchange: nbs(exchange),
-                side: <Tag type="warning">{side.toUpperCase()}</Tag>,
-                quantityTotal: formatQuantity(quantityTotal),
-                quantityOpen: formatQuantity(quantityOpen),
-                cost: formatCurrency(cost),
-                avgEntryPrice: formatCurrency(avgEntry),
-                avgExitPrice: formatCurrency(avgExit),
-                returnTotal: (
-                  <Text type={status === 'WINNER' || returnTotal >= 0 ? 'warning' : 'error'}>
-                    {formatCurrency(returnTotal)}
-                  </Text>
-                ),
-                returnPercent: (
-                  <Text type={status === 'WINNER' || returnPercent >= 0 ? 'warning' : 'error'}>
-                    {nbs(returnPercent.toFixed(2) + ' %')}
-                  </Text>
-                ),
-                result: (
-                  <Tag invert type="warning">
-                    {status}
-                  </Tag>
-                )
-              }
-            })}
-        >
-          <Table.Column prop="type" label="Type" />
-          <Table.Column prop="symbol" label="Symbol" />
-          <Table.Column prop="exchange" label="Exchange" />
-          <Table.Column prop="side" label="Side" />
-          <Table.Column prop="quantityTotal" label={nbs('Qty Total')} />
-          <Table.Column prop="quantityOpen" label={nbs('Qty Open')} />
-          <Table.Column prop="cost" label="Cost" />
-          <Table.Column prop="avgEntryPrice" label={nbs('Avg Entry')} />
-          <Table.Column prop="avgExitPrice" label={nbs('Avg Exit')} />
-          <Table.Column prop="returnTotal" label={nbs('Return $')} />
-          <Table.Column prop="returnPercent" label={nbs('Return %')} />
-          <Table.Column prop="result" label="Result" />
-        </Table>
-      </div>
       <TradeModal
         isTradeModalOpen={isTradeModalOpen}
         setIsTradeModalOpen={setIsTradeModalOpen}

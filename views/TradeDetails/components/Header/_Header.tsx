@@ -2,19 +2,13 @@
 import PropTypes from 'prop-types'
 
 // Geist UI
-import { Text, Card, Grid, Button, Description, Dot, Spacer } from '@geist-ui/react'
+import { Text, Grid, Button, Spacer } from '@geist-ui/react'
 import { Trash as TrashIcon } from '@geist-ui/react-icons'
 
-// Global Utils
-import formatCurrency from '@utils/formatCurrency'
-import formatQuantity from '@utils/formatQuantity'
+// Global Components
+import { TradeCard } from 'components'
 
 function Header({ trade, setIsDeleteTradeModalOpen }: HeaderProps): JSX.Element {
-  function getStatusColor(trade): Partial<'warning' | 'error'> {
-    if (trade.status === 'WINNER' || trade.returnPercent >= 0) return 'warning'
-    if (trade.status === 'LOOSER' || trade.returnPercent < 0) return 'error'
-  }
-
   return (
     <>
       <Grid.Container alignItems="center" justify="space-between">
@@ -29,58 +23,7 @@ function Header({ trade, setIsDeleteTradeModalOpen }: HeaderProps): JSX.Element 
         />
       </Grid.Container>
       <Spacer />
-      <Card>
-        <Grid.Container gap={2}>
-          <Grid xs>
-            <Description title="Exchange" content={trade.exchange} />
-          </Grid>
-          <Grid xs>
-            <Description title="Side" content={trade.side} />
-          </Grid>
-          <Grid xs>
-            <Description
-              title="Qty Total / Open"
-              content={`${formatQuantity(trade.quantityTotal)} / ${formatQuantity(
-                trade.quantityOpen
-              )}`}
-            />
-          </Grid>
-          <Grid xs>
-            <Description
-              title="Cost"
-              content={
-                <>
-                  {formatCurrency(trade.cost)}
-                  <br />
-                  {trade.type === 'Leverage' && <>({trade.leverage}x)</>}
-                </>
-              }
-            />
-          </Grid>
-          <Grid xs>
-            <Description
-              title="Avg Entry / Exit"
-              content={`${formatCurrency(trade.avgEntry)} / ${formatCurrency(trade.avgExit)}`}
-            />
-          </Grid>
-          <Grid xs>
-            <Description
-              title="PNL"
-              content={
-                <>
-                  {formatCurrency(trade.returnTotal)} ({trade.returnPercent.toFixed(2)}%)
-                </>
-              }
-            />
-          </Grid>
-          <Grid xs>
-            <Description
-              title="Status"
-              content={<Dot type={getStatusColor(trade)}>{trade.status}</Dot>}
-            />
-          </Grid>
-        </Grid.Container>
-      </Card>
+      <TradeCard trade={trade} />
     </>
   )
 }
@@ -90,16 +33,20 @@ type HeaderProps = {
   trade: {
     _id: string
     type: string
-    exchange: string
-    symbol: string
-    side: string
-    status: string
     leverage: number
-    quantityTotal: number
-    quantityOpen: number
+    exchange: string
+    status: string
+    symbol: string
+    date: Date
+    price: number
+    quantity: number
+    side: string
+    fees: number
     cost: number
     avgEntry: number
     avgExit: number
+    quantityTotal: number
+    quantityOpen: number
     returnTotal: number
     returnPercent: number
   }

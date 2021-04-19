@@ -13,7 +13,9 @@ import {
   getQuantityTotal,
   getReturnPercent,
   getReturnTotal,
-  getStatus
+  getStatus,
+  getFees,
+  getDate
 } from './utils'
 
 // Geist UI
@@ -71,6 +73,8 @@ function Orders({ trade, mutate }: OrdersProps): JSX.Element {
       const returnTotal = getReturnTotal(avgEntry, avgExit, side, changedOrders)
       const returnPercent = getReturnPercent(cost, returnTotal)
       const status = getStatus(quantityOpen, avgEntry, avgExit, side)
+      const fees = getFees(changedOrders)
+      const date = getDate(changedOrders)
 
       const changedTrade = {
         ...trade,
@@ -83,6 +87,8 @@ function Orders({ trade, mutate }: OrdersProps): JSX.Element {
         returnTotal,
         returnPercent,
         status,
+        fees,
+        date,
         orders: changedOrders
       }
 

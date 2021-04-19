@@ -19,6 +19,8 @@ const TradeSchema = new Schema({
   avgExit: { type: Number, required: true },
   returnTotal: { type: Number, required: true },
   returnPercent: { type: Number, required: true },
+  fees: { type: Number, default: 0 },
+  date: { type: Date },
   //
   orders: [
     {
@@ -26,7 +28,7 @@ const TradeSchema = new Schema({
       date: { type: Date, required: true },
       price: { type: Number, required: true },
       quantity: { type: Number, required: true },
-      fees: { type: Number, required: true }
+      fees: { type: Number, default: 0 }
     }
   ],
   //

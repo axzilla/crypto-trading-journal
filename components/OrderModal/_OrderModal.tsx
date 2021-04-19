@@ -142,7 +142,7 @@ OrderModal.propTypes = {
   setIsOrderModalOpen: PropTypes.func.isRequired,
   order: PropTypes.object,
   handleCrdOrder: PropTypes.func.isRequired,
-  isLastItem: PropTypes.func
+  isLastItem: PropTypes.bool
 }
 
 export default OrderModal

@@ -1,6 +1,8 @@
 export { default as getAvgEntry } from './_getAvgEntry'
 export { default as getAvgExit } from './_getAvgExit'
 export { default as getCost } from './_getCost'
+export { default as getDate } from './_getDate'
+export { default as getFees } from './_getFees'
 export { default as getQuantityOpen } from './_getQuantityOpen'
 export { default as getQuantityTotal } from './_getQuantityTotal'
 export { default as getReturnPercent } from './_getReturnPercent'
