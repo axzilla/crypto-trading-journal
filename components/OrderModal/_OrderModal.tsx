@@ -76,9 +76,11 @@ function OrderModal({
             />
           </Grid.Container>
         </Modal.Content>
-        <Modal.Action disabled={isLastItem} onClick={() => setIsDeleteOrderModalOpen(true)}>
-          <Text type="error">Delete</Text>
-        </Modal.Action>
+        {order && (
+          <Modal.Action disabled={isLastItem} onClick={() => setIsDeleteOrderModalOpen(true)}>
+            <Text type="error">Delete</Text>
+          </Modal.Action>
+        )}
         <Modal.Action passive onClick={() => setIsOrderModalOpen(false)}>
           Cancel
         </Modal.Action>

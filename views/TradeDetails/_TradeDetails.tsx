@@ -46,7 +46,7 @@ function TradeDetails(): JSX.Element {
       await axios.post('/api/v1/trade/delete-trade-by-id', { tradeId })
       setIsDeleteTradeModalOpen(false)
       router.push('/trades')
-      setToast({ text: 'You have successfully deleted your trade!', type: 'success', delay: 5000 })
+      setToast({ text: 'Trade deleted successfully!', type: 'success', delay: 5000 })
     } catch (error) {
       setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
       if (error) throw error

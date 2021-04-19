@@ -125,7 +125,7 @@ function TradeFeed(): JSX.Element {
       setIsTradeModalOpen(false)
       resetForm()
       router.push(`/trades/${createdTrade._id}`)
-      setToast({ text: 'You have successfully added a trade!', type: 'success', delay: 5000 })
+      setToast({ text: 'Trade added successfully!', type: 'success', delay: 5000 })
     } catch (error) {
       setToast({ text: 'Error, please try it again!', type: 'error', delay: 5000 })
       if (error) throw error

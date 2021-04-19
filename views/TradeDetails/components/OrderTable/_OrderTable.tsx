@@ -46,19 +46,19 @@ function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
 
       if (type === 'create') {
         changedOrders = [...trade.orders, order]
-        toastMessage = 'You have successfully added a order!'
+        toastMessage = 'Order added successfully!'
       }
 
       if (type === 'update') {
         const index = trade.orders.map(order => order._id).indexOf(order._id)
         changedOrders = [...trade.orders.slice(0, index), order, ...trade.orders.slice(index + 1)]
-        toastMessage = 'You have successfully updated your order!'
+        toastMessage = 'Order updated successfully!'
       }
 
       if (type === 'delete') {
         const index = trade.orders.map(order => order._id).indexOf(order._id)
         changedOrders = [...trade.orders.slice(0, index), ...trade.orders.slice(index + 1)]
-        toastMessage = 'You have successfully deleted your order!'
+        toastMessage = 'Order deleted successfully'
       }
 
       const side = getSide(changedOrders)

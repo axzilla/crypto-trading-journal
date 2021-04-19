@@ -19,7 +19,7 @@ function Item({ order, handleCrdOrder, isLastItem }: ItemProps): JSX.Element {
 
   return (
     <>
-      <Card hoverable onClick={() => setIsOrderModalOpen(true)}>
+      <Card hoverable onClick={() => setIsOrderModalOpen(true)} style={{ cursor: 'pointer' }}>
         <Grid.Container gap={2}>
           <Grid xs>
             <Description title="Side" content={order.side} />
