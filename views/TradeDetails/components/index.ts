@@ -1,5 +1,5 @@
 export { default as Images } from './Images'
 export { default as Notes } from './Notes'
-export { default as OrderTable } from './OrderTable'
+export { default as Orders } from './Orders'
 export { default as Tags } from './Tags'
-export { default as TradeTable } from './TradeTable'
+export { default as Header } from './Header'

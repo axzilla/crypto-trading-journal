@@ -110,10 +110,10 @@ function Tags({ trade, type, mutate }: SetupsProps): JSX.Element {
   }
 
   return (
-    <Grid.Container>
+    <Grid.Container direction="column">
       <Text b>{type === 'setup' ? 'Setups' : 'Mistakes'}</Text>
-      <Spacer y={2} />
-      <Card style={{ width: '100%' }}>
+      <Spacer y={1} />
+      <Card style={{ width: '100%', flexGrow: 1 }}>
         <Card.Content>
           <Input
             placeholder="Add with enter..."

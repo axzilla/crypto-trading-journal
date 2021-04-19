@@ -25,7 +25,7 @@ import { Item } from './components'
 // Global Components
 import { OrderModal } from 'components'
 
-function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
+function Orders({ trade, mutate }: OrdersProps): JSX.Element {
   const [, setToast] = useToasts()
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
 
@@ -98,7 +98,7 @@ function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
     <>
       <Grid.Container justify="space-between" alignItems="flex-end">
         <Text style={{ margin: 0 }} h5>
-          History
+          Orders
         </Text>
         <Button onClick={() => setIsOrderModalOpen(true)} size="small" auto>
           Add Order
@@ -134,7 +134,7 @@ function OrderTable({ trade, mutate }: OrderTableProps): JSX.Element {
   )
 }
 
-type OrderTableProps = {
+type OrdersProps = {
   trade: {
     _id: string
     dateUpdated: Date
@@ -158,9 +158,9 @@ type OrderTableProps = {
   mutate: () => void
 }
 
-OrderTable.propTypes = {
+Orders.propTypes = {
   trade: PropTypes.object.isRequired,
   mutate: PropTypes.func.isRequired
 }
 
-export default OrderTable
+export default Orders

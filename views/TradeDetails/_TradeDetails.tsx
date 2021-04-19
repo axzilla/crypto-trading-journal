@@ -16,7 +16,7 @@ import makeStyles from 'utils/makeStyles'
 import { DeleteTradeModal } from 'components'
 
 // Local Components
-import { OrderTable, TradeTable, Notes, Tags, Images } from './components'
+import { Orders, Header, Notes, Tags, Images } from './components'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
   content: {
@@ -72,9 +72,9 @@ function TradeDetails(): JSX.Element {
         </Link>
       </NextLink>
       <Spacer />
-      <TradeTable trade={data} setIsDeleteTradeModalOpen={setIsDeleteTradeModalOpen} />
+      <Header trade={data} setIsDeleteTradeModalOpen={setIsDeleteTradeModalOpen} />
       <Spacer y={1} />
-      <OrderTable trade={data} mutate={mutate} />
+      <Orders trade={data} mutate={mutate} />
       <DeleteTradeModal
         isDeleteTradeModalOpen={isDeleteTradeModalOpen}
         setIsDeleteTradeModalOpen={setIsDeleteTradeModalOpen}

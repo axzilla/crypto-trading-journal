@@ -9,7 +9,7 @@ import { Trash as TrashIcon } from '@geist-ui/react-icons'
 import formatCurrency from '@utils/formatCurrency'
 import formatQuantity from '@utils/formatQuantity'
 
-function TradeTable({ trade, setIsDeleteTradeModalOpen }: TradeTableProps): JSX.Element {
+function Header({ trade, setIsDeleteTradeModalOpen }: HeaderProps): JSX.Element {
   function getStatusColor(trade): Partial<'warning' | 'error'> {
     if (trade.status === 'WINNER' || trade.returnPercent >= 0) return 'warning'
     if (trade.status === 'LOOSER' || trade.returnPercent < 0) return 'error'
@@ -85,7 +85,7 @@ function TradeTable({ trade, setIsDeleteTradeModalOpen }: TradeTableProps): JSX.
   )
 }
 
-type TradeTableProps = {
+type HeaderProps = {
   setIsDeleteTradeModalOpen: (e: boolean | string) => void
   trade: {
     _id: string
@@ -105,9 +105,9 @@ type TradeTableProps = {
   }
 }
 
-TradeTable.propTypes = {
+Header.propTypes = {
   trade: PropTypes.object.isRequired,
   setIsDeleteTradeModalOpen: PropTypes.func.isRequired
 }
 
-export default TradeTable
+export default Header
