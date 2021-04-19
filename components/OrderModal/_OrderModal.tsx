@@ -21,7 +21,8 @@ function OrderModal({
     side: '',
     date: new Date(),
     price: null,
-    quantity: null
+    quantity: null,
+    fees: null
   })
 
   useEffect(() => {
@@ -33,7 +34,8 @@ function OrderModal({
       side: '',
       date: new Date(),
       price: null,
-      quantity: null
+      quantity: null,
+      fees: null
     })
   }
 
@@ -72,6 +74,13 @@ function OrderModal({
               onChange={e => setOrderData({ ...orderData, quantity: parseFloat(e.target.value) })}
               placeholder="Quantity"
               label="Quantity"
+              fullWidth
+            />
+            <Number
+              value={orderData.fees}
+              onChange={e => setOrderData({ ...orderData, fees: parseFloat(e.target.value) })}
+              placeholder="Fees"
+              label="Fees"
               fullWidth
             />
           </Grid.Container>
@@ -121,7 +130,7 @@ function OrderModal({
 }
 
 type Props = {
-  order?: { date: Date; side: string; price: number; quantity: number; _id: string }
+  order?: { fees: number; date: Date; side: string; price: number; quantity: number; _id: string }
   handleCrdOrder: (order: unknown, type: string) => void
   isOrderModalOpen: boolean
   setIsOrderModalOpen: (e: boolean) => void

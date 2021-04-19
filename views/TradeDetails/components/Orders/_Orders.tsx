@@ -30,7 +30,7 @@ function Orders({ trade, mutate }: OrdersProps): JSX.Element {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
 
   async function handleCrdOrder(
-    order: { date: Date; side: string; price: number; quantity: number; _id: string },
+    order: { fees: number; date: Date; side: string; price: number; quantity: number; _id: string },
     type
   ) {
     try {
@@ -40,6 +40,7 @@ function Orders({ trade, mutate }: OrdersProps): JSX.Element {
         date: Date
         price: number
         quantity: number
+        fees: number
       }[]
 
       let toastMessage: string
@@ -150,7 +151,9 @@ type OrdersProps = {
     returnTotal: number
     returnPercent: number
     side: string
-    orders: [{ date: Date; side: string; price: number; quantity: number; _id: string }]
+    orders: [
+      { fees: number; date: Date; side: string; price: number; quantity: number; _id: string }
+    ]
     setups: []
     mistakes: []
     images: []

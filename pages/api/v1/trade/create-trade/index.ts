@@ -32,7 +32,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
       date,
       side,
       quantity,
-      price
+      price,
+      fees
     } = req.body
 
     const createdTrade = await Trade.create({
@@ -50,7 +51,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
       returnPercent,
       side,
       user: session.user._id,
-      orders: { date, side, quantity, price }
+      orders: { date, side, quantity, price, fees }
     })
 
     res.status(200).json(createdTrade)

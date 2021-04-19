@@ -25,7 +25,8 @@ const TradeSchema = new Schema({
       side: { type: String, required: true },
       date: { type: Date, required: true },
       price: { type: Number, required: true },
-      quantity: { type: Number, required: true }
+      quantity: { type: Number, required: true },
+      fees: { type: Number, required: true }
     }
   ],
   //

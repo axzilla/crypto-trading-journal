@@ -34,6 +34,9 @@ function Item({ order, handleCrdOrder, isLastItem }: ItemProps): JSX.Element {
             <Description title="Value" content={formatCurrency(order.price * order.quantity)} />
           </Grid>
           <Grid xs>
+            <Description title="Fees" content={formatCurrency(order.fees)} />
+          </Grid>
+          <Grid xs>
             <Description
               title="Date"
               content={nbs(moment(order.date).format('MMMM D, YYYY, h:mm'))}
@@ -54,7 +57,7 @@ function Item({ order, handleCrdOrder, isLastItem }: ItemProps): JSX.Element {
 }
 
 type ItemProps = {
-  order: { date: Date; side: string; price: number; quantity: number; _id: string }
+  order: { fees: number; date: Date; side: string; price: number; quantity: number; _id: string }
   handleCrdOrder: (order: unknown, type: string) => void
   isLastItem: boolean
 }
