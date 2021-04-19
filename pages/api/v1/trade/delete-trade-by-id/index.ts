@@ -5,6 +5,10 @@ import { getSession } from 'next-auth/client'
 // DB
 import dbConnect from 'utils/dbConnect'
 
+// Utils
+import cloudinary from 'utils/cloudinary'
+
+// Models
 import Trade from 'models/Trade'
 
 export default async function (req: NextApiRequest, res: NextApiResponse): Promise<unknown> {
@@ -15,7 +19,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
     await dbConnect()
     const { tradeId } = req.body
     const deletedTrade = await Trade.findOneAndDelete({ _id: tradeId, user: session.user._id })
-    res.status(200).json(deletedTrade)
+    await Promise.all(
+      deletedTrade.images.map(async image => {
+        return await cloudinary.v2.uploader.destroy(image.public_id)
+      })
+    )
+    res.status(200).json('success')
   } catch (error) {
     res.status(400).json(error)
   }
