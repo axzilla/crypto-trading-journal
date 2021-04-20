@@ -74,7 +74,8 @@ function TradeFeed(): JSX.Element {
   }, [])
 
   function getStatusColor(trade): Partial<'warning' | 'error'> {
-    if (trade.status === 'Winner' || trade.returnPercent >= 0) return 'warning'
+    if (trade.status === 'Winner' || trade.returnPercent >= 0 || trade.status === 'Open')
+      return 'warning'
     if (trade.status === 'Loser' || trade.returnPercent < 0) return 'error'
   }
 
