@@ -9,6 +9,9 @@ import makeStyles from 'utils/makeStyles'
 
 // Geist UI
 import {
+  Snippet,
+  Description,
+  Text,
   Button,
   GeistUIThemes,
   Link,
@@ -25,7 +28,8 @@ import {
   Moon as MoonIcon,
   TrendingUp as TrendingUpIcon,
   Github as GithubIcon,
-  Mail as MailIcon
+  Mail as MailIcon,
+  DollarSign as DollarSignIcon
 } from '@geist-ui/react-icons'
 
 const useStyles = makeStyles((ui: GeistUIThemes) => ({
@@ -54,6 +58,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
   const [, setToast] = useToasts()
   const [isLoading, setIsLoading] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false)
   const [feedback, setFeedback] = useState('')
 
   async function handleSendFeedback() {
@@ -102,6 +107,13 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
                   size="small"
                 />
                 <Spacer x={0.5} />
+                <Button
+                  iconRight={<DollarSignIcon />}
+                  onClick={() => setIsDonateModalOpen(true)}
+                  auto
+                  size="small"
+                />
+                <Spacer x={0.5} />
               </>
             )}
             <Button
@@ -118,6 +130,7 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         </Grid.Container>
       </Grid>
 
+      {/* Feedback Modal */}
       <Modal
         disableBackdropClick={isLoading}
         open={isFeedbackModalOpen}
@@ -126,7 +139,13 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
           setFeedback('')
         }}
       >
-        <Modal.Subtitle>Feedback</Modal.Subtitle>
+        <Modal.Title>Feedback</Modal.Title>
+        <Modal.Content>
+          <Text type="secondary" style={{ textAlign: 'center' }}>
+            Did you find a bug or do you have suggestions for improvement or ideas for new features?
+            Then I am very happy about your feedback!
+          </Text>
+        </Modal.Content>
         <Modal.Content>
           <Textarea
             width="100%"
@@ -147,6 +166,40 @@ function Menu({ toggleDarkMode, themeType }: Props): JSX.Element {
         </Modal.Action>
         <Modal.Action loading={isLoading} disabled={!feedback} onClick={handleSendFeedback}>
           Send
+        </Modal.Action>
+      </Modal>
+
+      {/* Donate Modal */}
+      <Modal open={isDonateModalOpen} onClose={() => setIsDonateModalOpen(false)}>
+        <Modal.Title>Donate</Modal.Title>
+        <Modal.Content>
+          <Text type="secondary" style={{ textAlign: 'center' }}>
+            If you would like to support this project and the further development and functions such
+            as free trade signals, bots and so on, I am very happy about a donation!
+          </Text>
+        </Modal.Content>
+        <Modal.Content>
+          <Description
+            title="BTC Wallet Address"
+            content={<Snippet symbol="" text="19JrHnYW7auqtDYY9beo9orgvtxCbrPHnu" type="warning" />}
+          />
+          <Spacer />
+          <Description
+            title="ETH Wallet Address"
+            content={
+              <Snippet symbol="" text="0x0637305c06b0aae04ce7ac2322cd8771b5470d9a" type="warning" />
+            }
+          />
+          <Spacer />
+          <Description
+            title="USDT Wallet Address"
+            content={
+              <Snippet symbol="" text="0x0637305c06b0aae04ce7ac2322cd8771b5470d9a" type="warning" />
+            }
+          />
+        </Modal.Content>
+        <Modal.Action passive loading={isLoading} onClick={() => setIsDonateModalOpen(false)}>
+          Okay
         </Modal.Action>
       </Modal>
     </>
