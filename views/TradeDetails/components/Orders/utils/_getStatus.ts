@@ -1,5 +1,5 @@
-function getStatus(quantity: number, avgEntry: number, avgExit: number, side: string): string {
-  if (quantity < 1) {
+function getStatus(quantityOpen: number, avgEntry: number, avgExit: number, side: string): string {
+  if (quantityOpen <= 0) {
     if (side === 'Long') {
       return avgEntry < avgExit ? 'Winner' : 'Loser'
     }
